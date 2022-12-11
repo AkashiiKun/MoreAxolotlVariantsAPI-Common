@@ -43,7 +43,7 @@ public class AxolotlEntityRendererMixin {
 
     @Inject(method = "<clinit>", at = @At(value = "TAIL"))
     private static void mavapi$ModifyVariantTextures(CallbackInfo ci) {
-            for(AxolotlEntity.Variant variant : AxolotlEntity.Variant.VARIANTS) {
+            for(AxolotlEntity.Variant variant : AxolotlEntity.Variant.values()) {
                 MoreAxolotlVariant metadata = ((AxolotlTypeExtension)(Object)variant).mavapi$metadata();
                 if(metadata.isModded()) {
                     TEXTURES.replace(variant, new Identifier(metadata.getId().getNamespace(), String.format(Locale.ROOT, "textures/entity/axolotl/axolotl_%s.png", metadata.getId().getPath())));

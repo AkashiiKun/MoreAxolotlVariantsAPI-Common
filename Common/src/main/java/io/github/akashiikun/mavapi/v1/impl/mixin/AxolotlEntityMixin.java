@@ -60,7 +60,7 @@ public abstract class AxolotlEntityMixin extends LivingEntity {
 
     @Inject(method = "getVariant", at = @At("HEAD"), cancellable = true)
     public void getVariant(CallbackInfoReturnable<AxolotlEntity.Variant> cir) {
-        for (AxolotlEntity.Variant variant : AxolotlEntity.Variant.VARIANTS) {
+        for (AxolotlEntity.Variant variant : AxolotlEntity.Variant.values()) {
             var metadata = ((AxolotlTypeExtension)(Object)variant).mavapi$metadata();
             if (metadata.getId().toString().equals(this.dataTracker.get(mavapi$VARIANT))) {
                 cir.setReturnValue(variant);
@@ -95,14 +95,14 @@ public abstract class AxolotlEntityMixin extends LivingEntity {
         try {
             if (nbt.contains(VARIANT_KEY, NbtElement.INT_TYPE)) {
                 var i = nbt.getInt(VARIANT_KEY);
-                if (i >= 0 && i < AxolotlEntity.Variant.VARIANTS.length) {
+                if (i >= 0 && i < AxolotlEntity.Variant.values().length) {
                     nbt.remove(VARIANT_KEY);
-                    nbt.putString(VARIANT_KEY, ((AxolotlTypeExtension) (Object) AxolotlEntity.Variant.VARIANTS[i]).mavapi$metadata().getId().toString());
+                    nbt.putString(VARIANT_KEY, ((AxolotlTypeExtension) (Object) AxolotlEntity.Variant.values()[i]).mavapi$metadata().getId().toString());
                 } else {
                     nbt.putString(VARIANT_KEY, "minecraft:lucy");
                 }
             }
-            for (AxolotlEntity.Variant variant : AxolotlEntity.Variant.VARIANTS) {
+            for (AxolotlEntity.Variant variant : AxolotlEntity.Variant.values()) {
                 if (((AxolotlTypeExtension) (Object) variant).mavapi$metadata().getId().equals(new Identifier(nbt.getString(VARIANT_KEY)))) {
                     this.setVariant(variant);
                     break;
@@ -131,9 +131,9 @@ public abstract class AxolotlEntityMixin extends LivingEntity {
         try {
             if (nbt.contains(VARIANT_KEY, NbtElement.INT_TYPE)) {
                 var i = nbt.getInt(VARIANT_KEY);
-                if (i >= 0 && i < AxolotlEntity.Variant.VARIANTS.length) {
+                if (i >= 0 && i < AxolotlEntity.Variant.values().length) {
                     nbt.remove(VARIANT_KEY);
-                    nbt.putString(VARIANT_KEY, ((AxolotlTypeExtension) (Object) AxolotlEntity.Variant.VARIANTS[i]).mavapi$metadata().getId().toString());
+                    nbt.putString(VARIANT_KEY, ((AxolotlTypeExtension) (Object) AxolotlEntity.Variant.values()[i]).mavapi$metadata().getId().toString());
                 } else {
                     nbt.putString(VARIANT_KEY, "minecraft:lucy");
                 }
@@ -142,7 +142,7 @@ public abstract class AxolotlEntityMixin extends LivingEntity {
             e.printStackTrace();
             nbt.putString(VARIANT_KEY, "minecraft:lucy");
         }
-        for (AxolotlEntity.Variant variant1 : AxolotlEntity.Variant.VARIANTS) {
+        for (AxolotlEntity.Variant variant1 : AxolotlEntity.Variant.values()) {
             if (((AxolotlTypeExtension)(Object)variant1).mavapi$metadata().getId().equals(new Identifier(nbt.getString(VARIANT_KEY)))) {
                 this.setVariant(variant1);
                 break;

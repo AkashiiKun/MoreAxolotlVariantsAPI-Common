@@ -25,7 +25,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(AxolotlEntity.Variant.class)
 public interface VariantWidener {
     @Mutable
-    @Accessor
+    @Accessor("field_28350")
     static void setVARIANTS(AxolotlEntity.Variant[] VARIANTS) {
         throw new UnsupportedOperationException();
     }
