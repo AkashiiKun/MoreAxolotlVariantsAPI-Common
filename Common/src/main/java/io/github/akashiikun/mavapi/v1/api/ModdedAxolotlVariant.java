@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 - 2022 Jab125, LimeAppleBoat & 2022 - 2022 Akashii
+ * Copyright (c) 2021 - 2023 Jab125, LimeAppleBoat & 2022 - 2023 Akashii
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,32 +18,32 @@ package io.github.akashiikun.mavapi.v1.api;
 
 import io.github.akashiikun.mavapi.v1.impl.AxolotlTypeExtension;
 import io.github.akashiikun.mavapi.v1.impl.ModdedAxolotlVariantImpl;
-import net.minecraft.entity.passive.AxolotlEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.animal.axolotl.Axolotl;
 
 public class ModdedAxolotlVariant {
-    public static Builder register(Identifier id) {
+    public static Builder register(ResourceLocation id) {
         var builder = new Builder();
         builder.id = id;
         return builder;
     }
     public static class Builder {
         private boolean natural = false;
-        private Identifier id;
+        private ResourceLocation id;
         private Builder(){}
         public Builder natural() {
             natural = true;
             return this;
         }
-        public AxolotlEntity.Variant build() {
-            AxolotlEntity.Variant[] variants = AxolotlEntity.Variant.values();
-            AxolotlEntity.Variant lastVariant = variants[variants.length-1];
+        public Axolotl.Variant build() {
+            Axolotl.Variant[] variants = Axolotl.Variant.values();
+            Axolotl.Variant lastVariant = variants[variants.length-1];
             String internalName = id.toString();
             int ordinal = variants[variants.length-1].ordinal()+1;
             int id = lastVariant.getId()+1;
             String name = internalName;
             boolean natural = this.natural;
-            AxolotlEntity.Variant variant = ModdedAxolotlVariantImpl.create(internalName, ordinal, id, name, natural);
+            Axolotl.Variant variant = ModdedAxolotlVariantImpl.create(internalName, ordinal, id, name, natural);
             ((AxolotlTypeExtension) (Object) variant).mavapi$metadata().modded();
             ((AxolotlTypeExtension) (Object) variant).mavapi$metadata().setId(this.id);
             return variant;

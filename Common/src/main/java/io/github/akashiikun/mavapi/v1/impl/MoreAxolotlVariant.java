@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 - 2022 Jab125, LimeAppleBoat & 2022 - 2022 Akashii
+ * Copyright (c) 2021 - 2023 Jab125, LimeAppleBoat & 2022 - 2023 Akashii
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,15 @@
 
 package io.github.akashiikun.mavapi.v1.impl;
 
-import net.minecraft.entity.passive.AxolotlEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.animal.axolotl.Axolotl;
 
 public class MoreAxolotlVariant {
     public static boolean p = false;
     private boolean modded = false;
-    private Identifier id;
-    private AxolotlEntity.Variant type;
-    public static MoreAxolotlVariant make(AxolotlEntity.Variant type) {
+    private ResourceLocation id;
+    private Axolotl.Variant type;
+    public static MoreAxolotlVariant make(Axolotl.Variant type) {
         MoreAxolotlVariant moreAxolotlVariant = new MoreAxolotlVariant();
         moreAxolotlVariant.type = type;
         return moreAxolotlVariant;
@@ -34,7 +34,7 @@ public class MoreAxolotlVariant {
         modded = true;
     }
 
-    public void setId(Identifier id) {
+    public void setId(ResourceLocation id) {
         this.id = id;
     }
 
@@ -42,7 +42,7 @@ public class MoreAxolotlVariant {
         return modded;
     }
 
-    public Identifier getId() {
-        return !modded ? new Identifier(type.getName()) : id;
+    public ResourceLocation getId() {
+        return !modded ? new ResourceLocation(type.getName()) : id;
     }
 }

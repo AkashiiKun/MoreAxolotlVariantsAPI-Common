@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 - 2022 Jab125, LimeAppleBoat & 2022 - 2022 Akashii
+ * Copyright (c) 2021 - 2023 Jab125, LimeAppleBoat & 2022 - 2023 Akashii
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,6 @@ package io.github.akashiikun.mavapi.v1.impl.mixin;
 
 import io.github.akashiikun.mavapi.v1.impl.AxolotlTypeExtension;
 import io.github.akashiikun.mavapi.v1.impl.MoreAxolotlVariant;
-import net.minecraft.client.render.entity.AxolotlEntityRenderer;
-import net.minecraft.entity.passive.AxolotlEntity;
-import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -33,20 +30,23 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 import java.util.Locale;
 import java.util.Map;
+import net.minecraft.client.renderer.entity.AxolotlRenderer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.animal.axolotl.Axolotl;
 
-@Mixin(AxolotlEntityRenderer.class)
+@Mixin(AxolotlRenderer.class)
 public class AxolotlEntityRendererMixin {
     @Shadow
     @Mutable
     @Final
-    private static Map<AxolotlEntity.Variant, Identifier> TEXTURES;
+    private static Map<Axolotl.Variant, ResourceLocation> TEXTURE_BY_TYPE;
 
     @Inject(method = "<clinit>", at = @At(value = "TAIL"))
     private static void mavapi$ModifyVariantTextures(CallbackInfo ci) {
-            for(AxolotlEntity.Variant variant : AxolotlEntity.Variant.VARIANTS) {
+            for(Axolotl.Variant variant : Axolotl.Variant.values()) {
                 MoreAxolotlVariant metadata = ((AxolotlTypeExtension)(Object)variant).mavapi$metadata();
                 if(metadata.isModded()) {
-                    TEXTURES.replace(variant, new Identifier(metadata.getId().getNamespace(), String.format(Locale.ROOT, "textures/entity/axolotl/axolotl_%s.png", metadata.getId().getPath())));
+                    TEXTURE_BY_TYPE.replace(variant, new ResourceLocation(metadata.getId().getNamespace(), String.format(Locale.ROOT, "textures/entity/axolotl/axolotl_%s.png", metadata.getId().getPath())));
                 }
             }
     }
