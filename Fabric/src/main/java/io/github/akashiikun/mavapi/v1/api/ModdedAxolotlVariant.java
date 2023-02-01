@@ -21,6 +21,8 @@ import io.github.akashiikun.mavapi.v1.impl.ModdedAxolotlVariantImpl;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
 
+import java.util.Locale;
+
 public class ModdedAxolotlVariant {
     public static Builder register(ResourceLocation id) {
         var builder = new Builder();
@@ -38,7 +40,7 @@ public class ModdedAxolotlVariant {
         public Axolotl.Variant build() {
             Axolotl.Variant[] variants = Axolotl.Variant.values();
             Axolotl.Variant lastVariant = variants[variants.length-1];
-            String internalName = id.toString();
+            String internalName = id.toString().toLowerCase(Locale.ROOT);
             int ordinal = variants[variants.length-1].ordinal()+1;
             int id = lastVariant.getId()+1;
             String name = internalName;
