@@ -18,12 +18,22 @@ package io.github.akashiikun.mavapi.v1.api;
 
 import io.github.akashiikun.mavapi.v1.impl.AxolotlTypeExtension;
 import io.github.akashiikun.mavapi.v1.impl.AxolotlVariantAPI;
+import io.github.akashiikun.mavapi.v1.impl.MoreAxolotlVariant;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class ModdedAxolotlVariant {
+
+    public static final Map<ResourceLocation, MoreAxolotlVariant> BY_ID = new HashMap<>();
+
+    public static MoreAxolotlVariant getMetadataById(ResourceLocation id) {
+        return BY_ID.get(id);
+    }
+
     public static Builder register(ResourceLocation id) {
         var builder = new Builder();
         builder.id = id;

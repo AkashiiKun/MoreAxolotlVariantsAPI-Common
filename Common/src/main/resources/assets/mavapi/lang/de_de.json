@@ -1,0 +1,12 @@
+{
+  "mavapi.variant.name.minecraft.lucy": "Lucy",
+  "mavapi.variant.name.minecraft.wild": "Wild",
+  "mavapi.variant.name.minecraft.gold": "Gold",
+  "mavapi.variant.name.minecraft.cyan": "Cyan",
+  "mavapi.variant.name.minecraft.blue": "Blau",
+
+  "mavapi.bucket.tooltip.translation.variant": "Variante",
+  "mavapi.bucket.tooltip.translation.age": "Alter",
+  "mavapi.bucket.translation.baby": "Baby",
+  "mavapi.bucket.translation.adult": "Erwachsen"
+}
