@@ -20,6 +20,8 @@ subprojects {
     apply plugin: "dev.architectury.loom"
     apply plugin: "org.quiltmc.gradle.licenser"
 
+    publishToMavenLocal.enabled = false
+
     loom {
         silentMojangMappingsLicense()
         mixin {
@@ -73,6 +75,7 @@ subprojects {
     }
 
     build.dependsOn applyLicenses
+    build.finalizedBy mergeJars
 }
 
 allprojects {
@@ -85,7 +88,8 @@ allprojects {
     group = project.maven_group
 
     repositories {
-        mavenCentral()
+        mavenLocal()
+        maven { url "https://jitpack.io" }
     }
 
     tasks.withType(JavaCompile) {
@@ -129,7 +133,6 @@ publishing {
     repositories {
     }
 }
-
 
 build.finalizedBy mergeJars
 publishToMavenLocal.dependsOn build
