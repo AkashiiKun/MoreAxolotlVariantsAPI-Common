@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 - 2023 Jab125, LimeAppleBoat & 2022 - 2023 Akashii
+ * Copyright (c) 2021 - 2023 Jab125, LimeAppleBoat & 2022 - 2023 Akashii, 2023 KxmischesDomi
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package io.github.akashiikun.mavapi.v1.mixin;
 import io.github.akashiikun.mavapi.v1.impl.AxolotlTypeExtension;
 import io.github.akashiikun.mavapi.v1.impl.MoreAxolotlVariant;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.nbt.CompoundTag;
@@ -83,8 +84,8 @@ public abstract class MobBucketItemMixin {
 
 						MutableComponent component = Component.translatable("mavapi.bucket.format",
 								age < 0 ? Component.translatable("mavapi.bucket.translation.baby") : Component.translatable("mavapi.bucket.translation.adult"),
-								Component.translatable(String.format("mavapi.variant.%s.%s", id.getNamespace(), id.getPath())),
-								Component.translatable(String.format("mavapi.mod.%s", id.getNamespace()))
+								translateOrFormat(String.format("mavapi.variant.%s.%s", id.getNamespace(), id.getPath()), id.getPath()),
+								translateOrFormat(String.format("mavapi.mod.%s", id.getNamespace()), id.getNamespace())
 						);
 						component.setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY));
 						tooltip.add(component);
@@ -94,6 +95,20 @@ public abstract class MobBucketItemMixin {
 
 			}
 		}
+	}
+
+	private MutableComponent translateOrFormat(String translation, String toFormat) {
+		MutableComponent component = Component.translatable(translation);
+		if (!I18n.exists(translation)) {
+			component = Component.literal(formatName(toFormat));
+		}
+		return component;
+	}
+
+	private String formatName(String s) {
+		s =  s.replace("_", " ");
+		s = String.valueOf(s.charAt(0)).toUpperCase(Locale.ROOT) + s.substring(1);
+		return s;
 	}
 
 }
