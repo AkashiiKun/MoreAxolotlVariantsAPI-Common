@@ -31,9 +31,7 @@ public class MoreAxolotlVariant {
     public static MoreAxolotlVariant make(Axolotl.Variant type) {
         MoreAxolotlVariant moreAxolotlVariant = new MoreAxolotlVariant();
         moreAxolotlVariant.type = type;
-        if (!moreAxolotlVariant.isModded()) {
-            moreAxolotlVariant.setLegacyIndex(type.getId());
-        }
+        moreAxolotlVariant.setLegacyIndex(type.getId());
         return moreAxolotlVariant;
     }
 
