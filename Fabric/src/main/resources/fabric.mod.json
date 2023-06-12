@@ -5,7 +5,8 @@
   "name": "${mod_name}",
   "description": "${mod_description}",
   "authors": [
-    "${mod_author}"
+    "AkashiiKun",
+    "KxmischesDomi"
   ],
   "license": "${license}",
   "icon": "icon.png",
