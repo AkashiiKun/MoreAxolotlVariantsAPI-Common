@@ -20,7 +20,7 @@ subprojects {
     apply plugin: "dev.architectury.loom"
     apply plugin: "org.quiltmc.gradle.licenser"
 
-    publishToMavenLocal.enabled = false
+    //ublishToMavenLocal.enabled = false
 
     loom {
         silentMojangMappingsLicense()
@@ -134,6 +134,6 @@ publishing {
     }
 }
 
-build.finalizedBy mergeJars
-publishToMavenLocal.dependsOn build
+mergeJars.mustRunAfter build
+publishToMavenLocal.mustRunAfter mergeJars
 assemble.finalizedBy(mergeJars)
