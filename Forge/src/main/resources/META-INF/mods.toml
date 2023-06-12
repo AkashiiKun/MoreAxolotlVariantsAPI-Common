@@ -4,7 +4,7 @@ loaderVersion = "[46,)"
 license = "${license}"
 
 [[mods]]
-modId = "${mod_id}"
+modId = "mavapi"
 version = "${mod_version}"
 displayName = "${mod_name}"
 authors = "${mod_author}"
@@ -13,14 +13,14 @@ ${mod_description}
 '''
 logoFile = "icon.png"
 
-[[dependencies.${mod_id}]]
+[[dependencies.mavapi]]
 modId = "forge"
 mandatory = true
 versionRange = "[46,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.${mod_id}]]
+[[dependencies.mavapi]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[1.20,)"
