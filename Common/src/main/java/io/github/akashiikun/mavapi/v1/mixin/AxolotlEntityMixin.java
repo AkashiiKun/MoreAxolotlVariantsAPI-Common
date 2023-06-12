@@ -120,8 +120,11 @@ public abstract class AxolotlEntityMixin extends LivingEntity {
             nbt.putString(VARIANT_TAG, "minecraft:lucy");
         }
 
-        MoreAxolotlVariant variant1 = AxolotlVariants.getById(new ResourceLocation(nbt.getString(VARIANT_TAG)));
-        this.setVariant(variant1.getType());
+        if (nbt.contains(VARIANT_TAG, Tag.TAG_STRING)) {
+            MoreAxolotlVariant variant1 = AxolotlVariants.getById(new ResourceLocation(nbt.getString(VARIANT_TAG)));
+            this.setVariant(variant1.getType());
+        }
+
 
     }
 
