@@ -17,5 +17,5 @@
 package io.github.akashiikun.mavapi.v1.impl;
 
 public interface AxolotlTypeExtension {
-    public MoreAxolotlVariant mavapi$metadata();
+    MoreAxolotlVariant mavapi$metadata();
 }

@@ -16,8 +16,8 @@
 
 package io.github.akashiikun.mavapi.v1.mixin;
 
-import io.github.akashiikun.mavapi.v1.api.AxolotlBuckets;
-import io.github.akashiikun.mavapi.v1.api.ModdedAxolotlVariant;
+import io.github.akashiikun.mavapi.v1.api.AxolotlVariants;
+import io.github.akashiikun.mavapi.v1.impl.AxolotlBuckets;
 import io.github.akashiikun.mavapi.v1.impl.MoreAxolotlVariant;
 import net.minecraft.client.renderer.ItemModelShaper;
 import net.minecraft.client.resources.model.BakedModel;
@@ -28,6 +28,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -41,6 +42,15 @@ import java.util.Map;
 @Mixin(ItemModelShaper.class)
 public abstract class ItemModelShaperMixin {
 
+	@Mixin(ModelManager.class)
+	public interface ModelManagerAccessor {
+
+		@Accessor("bakedRegistry")
+		Map<ResourceLocation, BakedModel> getBakedRegistry();
+
+	}
+
+
 	@Shadow public abstract ModelManager getModelManager();
 
 	@Inject(method = "getItemModel(Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/client/resources/model/BakedModel;", at = @At("HEAD"), cancellable = true)
@@ -49,7 +59,7 @@ public abstract class ItemModelShaperMixin {
 			if (stack.getTag() != null && stack.getTag().contains("Variant", Tag.TAG_STRING)) {
 				String variant = stack.getTag().getString("Variant");
 
-				MoreAxolotlVariant metadata = ModdedAxolotlVariant.getMetadataById(new ResourceLocation(variant));
+				MoreAxolotlVariant metadata = AxolotlVariants.getById(new ResourceLocation(variant));
 
 				if (AxolotlBuckets.doesModelForBucketExist(metadata.getId())) {
 					Map<ResourceLocation, BakedModel> models = ((ModelManagerAccessor) getModelManager()).getBakedRegistry();

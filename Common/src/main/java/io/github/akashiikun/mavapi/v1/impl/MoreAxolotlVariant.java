@@ -20,18 +20,29 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
 
 public class MoreAxolotlVariant {
+
     public static boolean p = false;
+
     private boolean modded = false;
+    private int legacyIndex = -1;
     private ResourceLocation id;
     private Axolotl.Variant type;
+
     public static MoreAxolotlVariant make(Axolotl.Variant type) {
         MoreAxolotlVariant moreAxolotlVariant = new MoreAxolotlVariant();
         moreAxolotlVariant.type = type;
+        if (!moreAxolotlVariant.isModded()) {
+            moreAxolotlVariant.setLegacyIndex(type.getId());
+        }
         return moreAxolotlVariant;
     }
 
     public void modded() {
         modded = true;
+    }
+
+    public void setLegacyIndex(int legacyIndex) {
+        this.legacyIndex = legacyIndex;
     }
 
     public void setId(ResourceLocation id) {
@@ -42,7 +53,16 @@ public class MoreAxolotlVariant {
         return modded;
     }
 
+    public int getLegacyIndex() {
+        return legacyIndex;
+    }
+
     public ResourceLocation getId() {
         return !modded ? new ResourceLocation(type.getName()) : id;
     }
+
+    public Axolotl.Variant getType() {
+        return type;
+    }
+
 }

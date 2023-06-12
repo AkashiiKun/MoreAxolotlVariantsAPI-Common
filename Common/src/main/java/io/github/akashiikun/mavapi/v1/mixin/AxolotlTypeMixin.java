@@ -16,6 +16,7 @@
 
 package io.github.akashiikun.mavapi.v1.mixin;
 
+import io.github.akashiikun.mavapi.v1.api.AxolotlVariants;
 import io.github.akashiikun.mavapi.v1.api.ModdedAxolotlVariant;
 import io.github.akashiikun.mavapi.v1.impl.AxolotlTypeExtension;
 import io.github.akashiikun.mavapi.v1.impl.MoreAxolotlVariant;
@@ -29,14 +30,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Axolotl.Variant.class)
 public class AxolotlTypeMixin implements AxolotlTypeExtension {
+
     @Unique
     private MoreAxolotlVariant metadata;
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void mavapi$init(String string, int i, int id, String name, boolean natural, CallbackInfo ci) {
         metadata = MoreAxolotlVariant.make((Axolotl.Variant) (Object) this);
-        ModdedAxolotlVariant.BY_ID.put(metadata.getId(), metadata);
+        AxolotlVariants.BY_ID.put(metadata.getId(), metadata);
     }
+
     @Override
     public MoreAxolotlVariant mavapi$metadata() {
         return metadata;
@@ -47,4 +50,5 @@ public class AxolotlTypeMixin implements AxolotlTypeExtension {
     public void mavapi$getName(CallbackInfoReturnable<String> cir) {
         if (MoreAxolotlVariant.p && metadata.isModded()) cir.setReturnValue("car");
     }
+
 }

@@ -18,35 +18,38 @@ package io.github.akashiikun.mavapi.v1.api;
 
 import io.github.akashiikun.mavapi.v1.impl.AxolotlTypeExtension;
 import io.github.akashiikun.mavapi.v1.impl.AxolotlVariantAPI;
-import io.github.akashiikun.mavapi.v1.impl.MoreAxolotlVariant;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
 
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 public class ModdedAxolotlVariant {
-
-    public static final Map<ResourceLocation, MoreAxolotlVariant> BY_ID = new HashMap<>();
-
-    public static MoreAxolotlVariant getMetadataById(ResourceLocation id) {
-        return BY_ID.get(id);
-    }
 
     public static Builder register(ResourceLocation id) {
         var builder = new Builder();
         builder.id = id;
         return builder;
     }
+
     public static class Builder {
+
         private boolean natural = false;
+        private int legacyIndex = -1;
         private ResourceLocation id;
-        private Builder(){}
+
+        private Builder() {
+
+        }
+
         public Builder natural() {
             natural = true;
             return this;
         }
+
+        public void setLegacyIndex(int legacyIndex) {
+            this.legacyIndex = legacyIndex;
+        }
+
         public Axolotl.Variant build() {
             Axolotl.Variant[] variants = Axolotl.Variant.values();
             Axolotl.Variant lastVariant = variants[variants.length-1];
@@ -58,7 +61,10 @@ public class ModdedAxolotlVariant {
             Axolotl.Variant variant = AxolotlVariantAPI.create(internalName, ordinal, id, name, natural);
             ((AxolotlTypeExtension) (Object) variant).mavapi$metadata().modded();
             ((AxolotlTypeExtension) (Object) variant).mavapi$metadata().setId(this.id);
+            ((AxolotlTypeExtension) (Object) variant).mavapi$metadata().setLegacyIndex(this.legacyIndex);
             return variant;
         }
+
     }
+
 }

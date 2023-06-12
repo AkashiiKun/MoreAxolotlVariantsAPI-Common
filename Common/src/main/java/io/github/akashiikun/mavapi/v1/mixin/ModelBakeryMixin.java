@@ -16,16 +16,13 @@
 
 package io.github.akashiikun.mavapi.v1.mixin;
 
-import io.github.akashiikun.mavapi.v1.api.AxolotlBuckets;
+import io.github.akashiikun.mavapi.v1.impl.AxolotlBuckets;
 import io.github.akashiikun.mavapi.v1.impl.AxolotlTypeExtension;
 import io.github.akashiikun.mavapi.v1.impl.MoreAxolotlVariant;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
-import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -34,7 +31,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -52,7 +48,7 @@ public abstract class ModelBakeryMixin {
 
 	@Shadow @Final private Map<ResourceLocation, UnbakedModel> topLevelModels;
 
-	@Inject(method = "loadTopLevel", at = @At("HEAD"))
+	@Inject(method = "loadTopLevel", at = @At("TAIL"))
 	private void addModelHook(ModelResourceLocation id, CallbackInfo info) {
 		if (id == MISSING_MODEL_LOCATION) {
 

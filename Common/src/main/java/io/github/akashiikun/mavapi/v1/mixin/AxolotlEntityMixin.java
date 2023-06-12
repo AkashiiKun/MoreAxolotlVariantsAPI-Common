@@ -16,7 +16,9 @@
 
 package io.github.akashiikun.mavapi.v1.mixin;
 
+import io.github.akashiikun.mavapi.v1.api.AxolotlVariants;
 import io.github.akashiikun.mavapi.v1.impl.AxolotlTypeExtension;
+import io.github.akashiikun.mavapi.v1.impl.MoreAxolotlVariant;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -60,13 +62,8 @@ public abstract class AxolotlEntityMixin extends LivingEntity {
 
     @Inject(method = "getVariant", at = @At("HEAD"), cancellable = true)
     public void getVariant(CallbackInfoReturnable<Axolotl.Variant> cir) {
-        for (Axolotl.Variant variant : Axolotl.Variant.values()) {
-            var metadata = ((AxolotlTypeExtension)(Object)variant).mavapi$metadata();
-            if (metadata.getId().toString().equals(this.entityData.get(mavapi$VARIANT))) {
-                cir.setReturnValue(variant);
-                break;
-            }
-        }
+        MoreAxolotlVariant variant1 = AxolotlVariants.getById(new ResourceLocation(this.entityData.get(mavapi$VARIANT)));
+        cir.setReturnValue(variant1.getType());
     }
 
     @Inject(method = "setVariant", at = @At("HEAD"))
@@ -93,21 +90,9 @@ public abstract class AxolotlEntityMixin extends LivingEntity {
     @Inject(method = "loadFromBucketTag", at = @At(value = "RETURN"))
     private void mavm$loadFromBucketTag(CompoundTag nbt, CallbackInfo ci) {
         try {
-            if (nbt.contains(VARIANT_TAG, Tag.TAG_INT)) {
-                var i = nbt.getInt(VARIANT_TAG);
-                if (i >= 0 && i < Axolotl.Variant.values().length) {
-                    nbt.remove(VARIANT_TAG);
-                    nbt.putString(VARIANT_TAG, ((AxolotlTypeExtension) (Object) Axolotl.Variant.values()[i]).mavapi$metadata().getId().toString());
-                } else {
-                    nbt.putString(VARIANT_TAG, "minecraft:lucy");
-                }
-            }
-            for (Axolotl.Variant variant : Axolotl.Variant.values()) {
-                if (((AxolotlTypeExtension) (Object) variant).mavapi$metadata().getId().equals(new ResourceLocation(nbt.getString(VARIANT_TAG)))) {
-                    this.setVariant(variant);
-                    break;
-                }
-            }
+            replaceLegacyId(nbt);
+            MoreAxolotlVariant variant1 = AxolotlVariants.getById(new ResourceLocation(nbt.getString(VARIANT_TAG)));
+            this.setVariant(variant1.getType());
         } catch (Exception e) {
             e.printStackTrace();
             this.setVariant(Axolotl.Variant.LUCY);
@@ -129,24 +114,31 @@ public abstract class AxolotlEntityMixin extends LivingEntity {
     @Redirect(method = "readAdditionalSaveData", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/animal/axolotl/Axolotl;setVariant(Lnet/minecraft/world/entity/animal/axolotl/Axolotl$Variant;)V"))
     private void mavm$readAdditionalSaveData(Axolotl instance, Axolotl.Variant variant) {
         try {
-            if (nbt.contains(VARIANT_TAG, Tag.TAG_INT)) {
-                var i = nbt.getInt(VARIANT_TAG);
-                if (i >= 0 && i < Axolotl.Variant.values().length) {
-                    nbt.remove(VARIANT_TAG);
-                    nbt.putString(VARIANT_TAG, ((AxolotlTypeExtension) (Object) Axolotl.Variant.values()[i]).mavapi$metadata().getId().toString());
-                } else {
-                    nbt.putString(VARIANT_TAG, "minecraft:lucy");
-                }
-            }
+            replaceLegacyId(nbt);
         } catch (Exception e) {
             e.printStackTrace();
             nbt.putString(VARIANT_TAG, "minecraft:lucy");
         }
-        for (Axolotl.Variant variant1 : Axolotl.Variant.values()) {
-            if (((AxolotlTypeExtension)(Object)variant1).mavapi$metadata().getId().equals(new ResourceLocation(nbt.getString(VARIANT_TAG)))) {
-                this.setVariant(variant1);
-                break;
+
+        MoreAxolotlVariant variant1 = AxolotlVariants.getById(new ResourceLocation(nbt.getString(VARIANT_TAG)));
+        this.setVariant(variant1.getType());
+
+    }
+
+    private void replaceLegacyId(CompoundTag nbt) {
+        if (nbt.contains(VARIANT_TAG, Tag.TAG_INT)) {
+            int i = nbt.getInt(VARIANT_TAG);
+            nbt.remove(VARIANT_TAG);
+
+            for (Axolotl.Variant variant : Axolotl.Variant.values()) {
+                MoreAxolotlVariant metadata = ((AxolotlTypeExtension) (Object) variant).mavapi$metadata();
+                if (metadata.getLegacyIndex() == i) {
+                    nbt.putString(VARIANT_TAG, metadata.getId().toString());
+                    return;
+                }
             }
+            nbt.putString(VARIANT_TAG, "minecraft:lucy");
         }
     }
+
 }

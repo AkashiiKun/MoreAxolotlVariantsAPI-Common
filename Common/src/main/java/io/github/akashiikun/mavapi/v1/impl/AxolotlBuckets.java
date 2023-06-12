@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-package io.github.akashiikun.mavapi.v1.mixin;
+package io.github.akashiikun.mavapi.v1.impl;
 
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelManager;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Accessor;
+import net.minecraft.server.packs.resources.Resource;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * @author KxmischesDomi | https://github.com/kxmischesdomi
  * @since 1.0
  */
-@Mixin(ModelManager.class)
-public interface ModelManagerAccessor {
+public class AxolotlBuckets {
 
-	@Accessor("bakedRegistry")
-	Map<ResourceLocation, BakedModel> getBakedRegistry();
+	public static boolean doesModelForBucketExist(ResourceLocation resourceLocation) {
+		ResourceLocation fileLocation = new ResourceLocation(resourceLocation.getNamespace(), String.format("models/item/axolotl_bucket_%s.json", resourceLocation.getPath()));
+		List<Resource> stack = Minecraft.getInstance().getResourceManager().getResourceStack(fileLocation);
+		return stack.size() > 0; // Model exists
+	}
 
 }
