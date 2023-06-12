@@ -1,8 +1,9 @@
 plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
-    id "dev.architectury.loom" version "1.0.+" apply false
+    id "dev.architectury.loom" version "1.1.+" apply false
 	id 'org.quiltmc.gradle.licenser' version '1.+' apply false
     id "io.github.pacifistmc.forgix" version "1.2.6"
+    id "maven-publish"
 }
     def targetJavaVersion = 17
 
@@ -23,12 +24,6 @@ subprojects {
         silentMojangMappingsLicense()
         mixin {
             defaultRefmapName = "${project.mod_id}_${project.name.toLowerCase()}.refmap.json"
-        }
-    }
-
-    repositories {
-        flatDir{
-            dirs "$rootProject.projectDir/lib"
         }
     }
 
@@ -78,8 +73,6 @@ subprojects {
     }
 
     build.dependsOn applyLicenses
-    build.finalizedBy(mergeJars)
-    assemble.finalizedBy(mergeJars)
 }
 
 allprojects {
@@ -92,7 +85,7 @@ allprojects {
     group = project.maven_group
 
     repositories {
-
+        mavenCentral()
     }
 
     tasks.withType(JavaCompile) {
@@ -123,3 +116,21 @@ forgix {
         jarLocation = "build/libs/${project.mod_id}-fabric-${project.mod_version}-mc${project.minecraft_version}" + (dev && buildnumber != 'custom' ? "+${buildnumber}" : '') + ".jar" // This is the location of the fabric jar from the fabric project. If this property is not defined then by default it fetches the jar with the shortest name.
     }
 }
+
+def finalJar = artifacts.add("archives", layout.buildDirectory.file("libs/${project.mod_id}-${project.mod_version}-mc${project.minecraft_version}" + (dev && buildnumber != 'custom' ? "+${buildnumber}" : '' + ".jar")))
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifactId = project.mod_id
+            artifact finalJar
+        }
+    }
+    repositories {
+    }
+}
+
+
+build.finalizedBy mergeJars
+publishToMavenLocal.dependsOn build
+assemble.finalizedBy(mergeJars)
