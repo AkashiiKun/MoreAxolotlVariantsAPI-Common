@@ -2,8 +2,8 @@
 
 ![Logo](https://github.com/AkashiiKun/MoreAxolotlVariantsAPI-Common/blob/master/img/title.png?raw=true)
 
-[![Java](https://img.shields.io/badge/Made%20with-JAVA-red?style=for-the-badge)](https://java.com/)
-[![License: ARR](https://img.shields.io/badge/license-ARR-red.svg?style=for-the-badge)](LICENSE)
+[![](https://cdn.discordapp.com/attachments/895334913560178698/915683102192468018/JoinDiscord.png)](https://discord.gg/7BSqZa9r3P)
+[![](https://media.discordapp.net/attachments/895334913560178698/915683907649822750/reportissue.png)](https://github.com/AkashiiKun/MoreAxolotlVariantsAPI-Common/issues)
 
 [![Modrinth](https://img.shields.io/modrinth/dt/t4Ybtys2?logo=modrinth&style=for-the-badge)](https://modrinth.com/mod/mavapi)
 [![Modrinth](https://img.shields.io/modrinth/game-versions/t4Ybtys2?logo=modrinth&style=for-the-badge)](https://modrinth.com/mod/mavapi)
