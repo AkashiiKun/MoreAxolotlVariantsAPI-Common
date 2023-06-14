@@ -2,6 +2,7 @@
 
 ![Logo](https://github.com/AkashiiKun/MoreAxolotlVariantsAPI-Common/blob/master/img/title.png?raw=true)
 
+[![](https://media.discordapp.net/attachments/895334913560178698/1118530263329288362/wiki.png)](https://github.com/AkashiiKun/MoreAxolotlVariantsAPI-Common/wiki)
 [![](https://cdn.discordapp.com/attachments/895334913560178698/915683102192468018/JoinDiscord.png)](https://discord.gg/7BSqZa9r3P)
 [![](https://media.discordapp.net/attachments/895334913560178698/915683907649822750/reportissue.png)](https://github.com/AkashiiKun/MoreAxolotlVariantsAPI-Common/issues)
 
