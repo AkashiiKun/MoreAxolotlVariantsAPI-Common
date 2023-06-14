@@ -1,3 +1,5 @@
+<center>
+
 ![Logo](https://github.com/AkashiiKun/MoreAxolotlVariantsAPI-Common/blob/master/img/title.png?raw=true)
 
 [![Java](https://img.shields.io/badge/Made%20with-JAVA-red?style=for-the-badge)](https://java.com/)
@@ -9,14 +11,39 @@
 [![Downloads](http://cf.way2muchnoise.eu/full_709964_downloads.svg?badge_style=for_the_badge)](https://www.curseforge.com/minecraft/mc-mods/mavapi)
 [![Versions](http://cf.way2muchnoise.eu/versions/709964.svg?badge_style=for_the_badge)](https://www.curseforge.com/minecraft/mc-mods/mavapi)
 
+</center>
+  
+&nbsp;
 
-This API simply lets you implement new axolotl variants.
+# **Introduction**
+- Lightweight API that other mods can use to add new Axolotl Variants Variants while keeping compatibility with each other
+- Does not any new variants on its own
+- Gives the possibility to add custom Axolotl Bucket Item models for modded variants
 
-To summon variants you use said identifiers. Example:
+# Out-Of-The-Box-Features
+- Appends a tooltip for Axolotl Buckets that shows the **age**, **variant** and **mod** it comes from
+- Changes the Axolotl Bucket Item Texture for all the vanilla variants to match the variant texture (Textures made by [VRAXX](https://github.com/NewSrVraxx))
 
+&nbsp;
+
+# **Information for everyone**
+
+## **Summoning Command**
+Summoning axolotl can be now done with a string value as the "Variant" nbt.
+
+This is similar to the namespace system minecraft uses almost anywhere else but doesn't for some entity variants included the axolotl's.
+
+For example this would be how to summon the vanilla lucy variant:
+```
 /summon minecraft:axolotl ~ ~ ~ {Variant:"minecraft:lucy"}
+```
 
-To add a new Axolotl Variant you just have to use these methods:
-ModdedAxolotlVariant.register(new ResourceLocation("yourmodid", "yourvariantname")).natural().build(); //to set a normal variant
+Or to summon a variant from More Axolotl:
+```
+/summon minecraft:axolotl ~ ~ ~ {Variant:"more-axolotl:neon"}
+```
 
-ModdedAxolotlVariant.register(new ResourceLocation("yourmodid", "yourvariantname")).build(); //to set a breeding only variant
+&nbsp;
+
+# **Information for Modders**
+Information dedicated to modding using the API can be found in the [Wiki](https://github.com/AkashiiKun/MoreAxolotlVariantsAPI-Common/wiki).
