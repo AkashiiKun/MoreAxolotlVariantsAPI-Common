@@ -15,35 +15,5 @@
   
 &nbsp;
 
-# **Introduction**
-- Lightweight API that other mods can use to add new Axolotl Variants Variants while keeping compatibility with each other
-- Does not any new variants on its own
-- Gives the possibility to add custom Axolotl Bucket Item models for modded variants
-
-# Out-Of-The-Box-Features
-- Appends a tooltip for Axolotl Buckets that shows the **age**, **variant** and **mod** it comes from
-- Changes the Axolotl Bucket Item Texture for all the vanilla variants to match the variant texture (Textures made by [VRAXX](https://github.com/NewSrVraxx))
-
-&nbsp;
-
-# **Information for everyone**
-
-## **Summoning Command**
-Summoning axolotl can be now done with a string value as the "Variant" nbt.
-
-This is similar to the namespace system minecraft uses almost anywhere else but doesn't for some entity variants included the axolotl's.
-
-For example this would be how to summon the vanilla lucy variant:
-```
-/summon minecraft:axolotl ~ ~ ~ {Variant:"minecraft:lucy"}
-```
-
-Or to summon a variant from More Axolotl:
-```
-/summon minecraft:axolotl ~ ~ ~ {Variant:"more-axolotl:neon"}
-```
-
-&nbsp;
-
-# **Information for Modders**
-Information dedicated to modding using the API can be found in the [Wiki](https://github.com/AkashiiKun/MoreAxolotlVariantsAPI-Common/wiki).
+# **Wiki**
+Please take a look at the [Wiki](https://github.com/AkashiiKun/MoreAxolotlVariantsAPI-Common/wiki) page to get more information.
