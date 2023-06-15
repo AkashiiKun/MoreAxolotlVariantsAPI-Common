@@ -46,8 +46,9 @@ public class ModdedAxolotlVariant {
             return this;
         }
 
-        public void setLegacyIndex(int legacyIndex) {
+        public Builder setLegacyIndex(int legacyIndex) {
             this.legacyIndex = legacyIndex;
+            return this;
         }
 
         public Axolotl.Variant build() {
