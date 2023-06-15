@@ -74,17 +74,15 @@ public abstract class AxolotlEntityMixin extends LivingEntity {
 
     @Redirect(method = "saveToBucketTag", at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/CompoundTag;putInt(Ljava/lang/String;I)V"))
     private void mavm$saveToBucketTag(CompoundTag instance, String key, int value) {
-        instance.putString(key, ((AxolotlTypeExtension)(Object)getVariant()).mavapi$metadata().getId().toString());
+        if (key.equals("Variant")) {
+            instance.putString(key, ((AxolotlTypeExtension)(Object)getVariant()).mavapi$metadata().getId().toString());
+        } else {
+            instance.putInt(key, value);
+        }
     }
 
     @Redirect(method = "loadFromBucketTag", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/animal/axolotl/Axolotl;setVariant(Lnet/minecraft/world/entity/animal/axolotl/Axolotl$Variant;)V"))
     private void mavm$loadFromBucketTag(Axolotl instance, Axolotl.Variant variant) {
-
-    }
-
-    @Redirect(method = "loadFromBucketTag", at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/CompoundTag;getInt(Ljava/lang/String;)I"))
-    private int mavm$loadFromBucketTag2(CompoundTag instance, String key) {
-        return 0;
     }
 
     @Inject(method = "loadFromBucketTag", at = @At(value = "RETURN"))
@@ -93,6 +91,7 @@ public abstract class AxolotlEntityMixin extends LivingEntity {
             replaceLegacyId(nbt);
             MoreAxolotlVariant variant1 = AxolotlVariants.getById(new ResourceLocation(nbt.getString(VARIANT_TAG)));
             this.setVariant(variant1.getType());
+
         } catch (Exception e) {
             e.printStackTrace();
             this.setVariant(Axolotl.Variant.LUCY);
