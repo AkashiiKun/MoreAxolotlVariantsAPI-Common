@@ -30,7 +30,9 @@ public class AxolotlVariantAPI {
         var d = new ArrayList<>(Arrays.stream(Axolotl.Variant.values()).toList());
         var e = VariantWidener.newVariant(internalName, ordinal, id, name, natural);
         d.add(e);
-        VariantWidener.setVariants(d.stream().sorted(Comparator.comparingInt(Axolotl.Variant::getId)).toArray(Axolotl.Variant[]::new));
+        Axolotl.Variant[] variants = d.stream().sorted(Comparator.comparingInt(Axolotl.Variant::getId)).toArray(Axolotl.Variant[]::new);
+        VariantWidener.setVariants(variants.clone());
+        VariantWidener.setById(variants.clone());
         return e;
     }
 }

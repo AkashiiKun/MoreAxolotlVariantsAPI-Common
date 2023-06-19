@@ -25,6 +25,12 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface VariantWidener {
 
     @Mutable
+    @Accessor("BY_ID")
+    static void setById(Axolotl.Variant[] VARIANTS) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Mutable
     @Accessor("$VALUES")
     static void setVariants(Axolotl.Variant[] VARIANTS) {
         throw new UnsupportedOperationException();
