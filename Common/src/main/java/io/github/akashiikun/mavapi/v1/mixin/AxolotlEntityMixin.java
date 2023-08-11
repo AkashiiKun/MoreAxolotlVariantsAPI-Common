@@ -121,8 +121,10 @@ public abstract class AxolotlEntityMixin extends LivingEntity {
         }
 
         if (nbt.contains(VARIANT_TAG, Tag.TAG_STRING)) {
-            MoreAxolotlVariant variant1 = AxolotlVariants.getById(new ResourceLocation(nbt.getString(VARIANT_TAG)));
-            this.setVariant(variant1.getType());
+            MoreAxolotlVariant variant1 = AxolotlVariants.getById(ResourceLocation.tryParse(nbt.getString(VARIANT_TAG)));
+            if (variant1 != null) {
+                this.setVariant(variant1.getType());
+            }
         }
 
 
