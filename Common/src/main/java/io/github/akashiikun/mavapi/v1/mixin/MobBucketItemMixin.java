@@ -20,8 +20,6 @@ import io.github.akashiikun.mavapi.v1.impl.AxolotlTypeExtension;
 import io.github.akashiikun.mavapi.v1.impl.MoreAxolotlVariant;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
@@ -38,19 +36,13 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import javax.swing.plaf.SpinnerUI;
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * @author KxmischesDomi | https://github.com/kxmischesdomi
@@ -58,7 +50,6 @@ import java.util.Map;
  */
 @Mixin(MobBucketItem.class)
 public abstract class MobBucketItemMixin {
-
 	private EntityType<?> entityType;
 
 	@Inject(method = "<init>", at = @At("RETURN"))

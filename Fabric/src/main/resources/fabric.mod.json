@@ -5,17 +5,21 @@
   "name": "${mod_name}",
   "description": "${mod_description}",
   "authors": [
-    "AkashiiKun",
-    "KxmischesDomi"
+    "${mod_author}"
   ],
+  "contact": {
+    "homepage": "${discord}",
+    "sources": "${source}"
+  },
   "license": "${license}",
   "icon": "icon.png",
   "environment": "*",
   "mixins": [
+    "${mod_id}-common.mixins.json",
     "${mod_id}.mixins.json"
   ],
   "depends": {
-    "fabric": "*",
-    "minecraft": ">=1.20"
+    "fabric-api": ">=${fabric_api}",
+    "minecraft": ">=${minecraft}"
   }
 }
