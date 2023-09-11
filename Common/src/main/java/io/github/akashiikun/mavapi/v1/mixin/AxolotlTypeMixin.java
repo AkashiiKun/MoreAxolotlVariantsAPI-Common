@@ -17,7 +17,6 @@
 package io.github.akashiikun.mavapi.v1.mixin;
 
 import io.github.akashiikun.mavapi.v1.api.AxolotlVariants;
-import io.github.akashiikun.mavapi.v1.api.ModdedAxolotlVariant;
 import io.github.akashiikun.mavapi.v1.impl.AxolotlTypeExtension;
 import io.github.akashiikun.mavapi.v1.impl.MoreAxolotlVariant;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;

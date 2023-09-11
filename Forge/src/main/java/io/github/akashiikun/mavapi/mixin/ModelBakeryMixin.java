@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.akashiikun.mavapi.v1.mixin;
+package io.github.akashiikun.mavapi.mixin;
 
 import io.github.akashiikun.mavapi.v1.impl.AxolotlBuckets;
 import io.github.akashiikun.mavapi.v1.impl.AxolotlTypeExtension;
@@ -48,20 +48,21 @@ public abstract class ModelBakeryMixin {
 
 	@Shadow @Final private Map<ResourceLocation, UnbakedModel> topLevelModels;
 
-	@Inject(method = "<init>", at = @At(value = "INVOKE", target = "net/minecraft/util/profiling/ProfilerFiller.popPush(Ljava/lang/String;)V", ordinal = 2, shift = At.Shift.AFTER))
-	private void addModelHook(CallbackInfo info) {
-		for (Axolotl.Variant variant : Axolotl.Variant.values()) {
-			MoreAxolotlVariant metadata = ((AxolotlTypeExtension) (Object) variant).mavapi$metadata();
+	@Inject(method = "loadTopLevel", at = @At("TAIL"))
+	private void addModelHook(ModelResourceLocation id, CallbackInfo info) {
+		if (id == MISSING_MODEL_LOCATION) {
+			for (Axolotl.Variant variant : Axolotl.Variant.values()) {
+				MoreAxolotlVariant metadata = ((AxolotlTypeExtension) (Object) variant).mavapi$metadata();
 
-			ResourceLocation variantId = metadata.getId();
+				ResourceLocation variantId = metadata.getId();
 
-			if (AxolotlBuckets.doesModelForBucketExist(variantId)) {
-				ResourceLocation modelLocation = new ResourceLocation(variantId.getNamespace(), String.format("item/axolotl_bucket_%s", variantId.getPath()));
-				UnbakedModel unbakedModel = getModel(modelLocation);
-				this.unbakedCache.put(modelLocation, unbakedModel);
-				this.topLevelModels.put(modelLocation, unbakedModel);
+				if (AxolotlBuckets.doesModelForBucketExist(variantId)) {
+					ResourceLocation modelLocation = new ResourceLocation(variantId.getNamespace(), String.format("item/axolotl_bucket_%s", variantId.getPath()));
+					UnbakedModel unbakedModel = getModel(modelLocation);
+					this.unbakedCache.put(modelLocation, unbakedModel);
+					this.topLevelModels.put(modelLocation, unbakedModel);
+				}
 			}
-
 		}
 	}
 

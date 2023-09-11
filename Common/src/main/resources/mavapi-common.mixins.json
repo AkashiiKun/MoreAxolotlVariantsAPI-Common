@@ -4,16 +4,15 @@
   "minVersion": "0.8",
   "compatibilityLevel": "JAVA_17",
   "client": [
-	"AxolotlEntityRendererMixin",
-	"ItemModelShaperMixin",
+    "AxolotlEntityRendererMixin",
+    "ItemModelShaperMixin",
 	"ItemModelShaperMixin$ModelManagerAccessor",
-	"MobBucketItemMixin",
-	"ModelBakeryMixin"
+    "MobBucketItemMixin"
   ],
   "mixins": [
-	"AxolotlEntityMixin",
-	"AxolotlTypeMixin",
-	"VariantWidener"
+    "AxolotlEntityMixin",
+    "AxolotlTypeMixin",
+    "VariantWidener"
   ],
   "injectors": {
 	"defaultRequire": 1
