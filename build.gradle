@@ -1,14 +1,14 @@
 plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
-    id "dev.architectury.loom" version "1.1-SNAPSHOT" apply false
+    id "dev.architectury.loom" version "1.5-SNAPSHOT" apply false
     id 'org.quiltmc.gradle.licenser' version '2.+' apply false
     id "io.github.pacifistmc.forgix" version "1.2.6"
+    id 'com.github.johnrengelman.shadow' version '8.1.1' apply false
 }
 
 allprojects {
     apply plugin: "java"
     apply plugin: 'idea'
-    apply plugin: "architectury-plugin"
     apply plugin: "maven-publish"
 }
 
@@ -22,6 +22,7 @@ project.buildnumber = System.getenv('BUILD_NUMBER') != null ? System.getenv('BUI
 
 subprojects {
     apply plugin: "dev.architectury.loom"
+    apply plugin: "architectury-plugin"
     apply plugin: "org.quiltmc.gradle.licenser"
 
     java.toolchain.languageVersion = JavaLanguageVersion.of(17)
@@ -121,7 +122,7 @@ forgix {
     }
 }
 
-def finalJar = artifacts.add("archives", layout.buildDirectory.file("libs/${project.mod_id}-${project.mod_version}-mc${rootProject.minecraft}" + (dev && buildnumber != 'custom' ? "+${buildnumber}" : '' + ".jar")))
+def finalJar = artifacts.add("archives", layout.buildDirectory.file("libs/${project.mod_id}-${project.mod_version}-mc${project.minecraft}" + (dev && buildnumber != 'custom' ? "+${buildnumber}" : '' + ".jar")))
 
 publishing {
     publications {
