@@ -19,7 +19,6 @@
     "${mod_id}.mixins.json"
   ],
   "depends": {
-    "fabric-api": ">=${fabric_api}",
-    "minecraft": ">=${minecraft}"
+    "fabric-api": ">=${fabric_api}"
   }
 }

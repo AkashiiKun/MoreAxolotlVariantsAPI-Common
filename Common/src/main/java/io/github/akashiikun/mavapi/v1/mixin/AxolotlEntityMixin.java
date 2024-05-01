@@ -1,17 +1,25 @@
 /*
- * Copyright (c) 2021 - 2023 Jab125, LimeAppleBoat & 2022 - 2023 Akashii, 2023 KxmischesDomi
+ * The MIT License (MIT)
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Copyright (c) 2021 - 2024 Akashii, 2023 - 2024 KxmischesDomi
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
 
 package io.github.akashiikun.mavapi.v1.mixin;
@@ -19,6 +27,8 @@ package io.github.akashiikun.mavapi.v1.mixin;
 import io.github.akashiikun.mavapi.v1.api.AxolotlVariants;
 import io.github.akashiikun.mavapi.v1.impl.AxolotlTypeExtension;
 import io.github.akashiikun.mavapi.v1.impl.MoreAxolotlVariant;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -26,63 +36,68 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.Brain;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.function.Consumer;
+
+@Debug(export = true)
 @Mixin(Axolotl.class)
-public abstract class AxolotlEntityMixin extends LivingEntity {
+public abstract class AxolotlEntityMixin extends Animal {
     @Shadow public abstract Axolotl.Variant getVariant();
 
     @Shadow @Final public static String VARIANT_TAG;
 
-    @Shadow protected abstract void setVariant(Axolotl.Variant variant);
+    @Shadow
+    public abstract void setVariant(Axolotl.Variant variant);
 
-    @Unique
     private static final EntityDataAccessor<String> mavapi$VARIANT = SynchedEntityData.defineId(Axolotl.class, EntityDataSerializers.STRING);
 
 
-    protected AxolotlEntityMixin(EntityType<? extends LivingEntity> entityType, Level world) {
+    protected AxolotlEntityMixin(EntityType<? extends Animal> entityType, Level world) {
         super(entityType, world);
     }
 
     @Inject(method = "defineSynchedData", at = @At("TAIL"))
-    private void mavm$initTrackers(CallbackInfo ci) {
-        this.entityData.define(mavapi$VARIANT, "minecraft:lucy");
+    //@Redirect(method = "defineSynchedData", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/syncher/SynchedEntityData$Builder;define(Lnet/minecraft/network/syncher/EntityDataAccessor;Ljava/lang/Object;)Lnet/minecraft/network/syncher/SynchedEntityData$Builder;", ordinal = 0))
+    private <T> void mavm$initTrackers(SynchedEntityData.Builder builder, CallbackInfo ci) {
+        builder.define(mavapi$VARIANT, "minecraft:lucy");
     }
 
     @Inject(method = "getVariant", at = @At("HEAD"), cancellable = true)
-    public void getVariant(CallbackInfoReturnable<Axolotl.Variant> cir) {
+    public void mavm$getVariant(CallbackInfoReturnable<Axolotl.Variant> cir) {
         MoreAxolotlVariant variant1 = AxolotlVariants.getById(new ResourceLocation(this.entityData.get(mavapi$VARIANT)));
         cir.setReturnValue(variant1.getType());
     }
 
     @Inject(method = "setVariant", at = @At("HEAD"))
-    private void setVariant(Axolotl.Variant variant, CallbackInfo ci) {
+    private void mavm$setVariant(Axolotl.Variant variant, CallbackInfo ci) {
         var metadata = ((AxolotlTypeExtension)(Object)variant).mavapi$metadata();
         this.entityData.set(mavapi$VARIANT, metadata.getId().toString());
     }
 
-    @Redirect(method = "saveToBucketTag", at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/CompoundTag;putInt(Ljava/lang/String;I)V"))
-    private void mavm$saveToBucketTag(CompoundTag instance, String key, int value) {
-        if (key.equals("Variant")) {
-            instance.putString(key, ((AxolotlTypeExtension)(Object)getVariant()).mavapi$metadata().getId().toString());
-        } else {
-            instance.putInt(key, value);
-        }
-    }
+    @Redirect(method = "saveToBucketTag", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/component/CustomData;update(Lnet/minecraft/core/component/DataComponentType;Lnet/minecraft/world/item/ItemStack;Ljava/util/function/Consumer;)V"))
+    private void mavm$saveToBucketTag(DataComponentType<CustomData> dataComponentType, ItemStack itemStack, Consumer<CompoundTag> consumer) {
+        CustomData.update(DataComponents.BUCKET_ENTITY_DATA, itemStack, (compoundTag) -> {
+            compoundTag.putString("Variant", ((AxolotlTypeExtension)(Object)getVariant()).mavapi$metadata().getId().toString());
+            compoundTag.putInt("Age", this.getAge());
+            Brain<?> brain = this.getBrain();
+            if (brain.hasMemoryValue(MemoryModuleType.HAS_HUNTING_COOLDOWN)) {
+                compoundTag.putLong("HuntingCooldown", brain.getTimeUntilExpiry(MemoryModuleType.HAS_HUNTING_COOLDOWN));
+            }
 
-    @Redirect(method = "loadFromBucketTag", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/animal/axolotl/Axolotl;setVariant(Lnet/minecraft/world/entity/animal/axolotl/Axolotl$Variant;)V"))
-    private void mavm$loadFromBucketTag(Axolotl instance, Axolotl.Variant variant) {
+        });
     }
 
     @Inject(method = "loadFromBucketTag", at = @At(value = "RETURN"))
