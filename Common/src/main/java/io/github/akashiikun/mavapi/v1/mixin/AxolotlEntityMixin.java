@@ -71,24 +71,24 @@ public abstract class AxolotlEntityMixin extends Animal {
 
     @Inject(method = "defineSynchedData", at = @At("TAIL"))
     //@Redirect(method = "defineSynchedData", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/syncher/SynchedEntityData$Builder;define(Lnet/minecraft/network/syncher/EntityDataAccessor;Ljava/lang/Object;)Lnet/minecraft/network/syncher/SynchedEntityData$Builder;", ordinal = 0))
-    private <T> void mavm$initTrackers(SynchedEntityData.Builder builder, CallbackInfo ci) {
+    private <T> void mavapi$initTrackers(SynchedEntityData.Builder builder, CallbackInfo ci) {
         builder.define(mavapi$VARIANT, "minecraft:lucy");
     }
 
-    @Inject(method = "getVariant", at = @At("HEAD"), cancellable = true)
-    public void mavm$getVariant(CallbackInfoReturnable<Axolotl.Variant> cir) {
-        MoreAxolotlVariant variant1 = AxolotlVariants.getById(new ResourceLocation(this.entityData.get(mavapi$VARIANT)));
+    @Inject(method = "getVariant*", at = @At("HEAD"), cancellable = true)
+    public void mavapi$getVariant(CallbackInfoReturnable<Axolotl.Variant> cir) {
+        MoreAxolotlVariant variant1 = AxolotlVariants.getById(ResourceLocation.tryParse(this.entityData.get(mavapi$VARIANT)));
         cir.setReturnValue(variant1.getType());
     }
 
-    @Inject(method = "setVariant", at = @At("HEAD"))
-    private void mavm$setVariant(Axolotl.Variant variant, CallbackInfo ci) {
+    @Inject(method = "setVariant*", at = @At("HEAD"))
+    private void mavapi$setVariant(Axolotl.Variant variant, CallbackInfo ci) {
         var metadata = ((AxolotlTypeExtension)(Object)variant).mavapi$metadata();
         this.entityData.set(mavapi$VARIANT, metadata.getId().toString());
     }
 
     @Redirect(method = "saveToBucketTag", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/component/CustomData;update(Lnet/minecraft/core/component/DataComponentType;Lnet/minecraft/world/item/ItemStack;Ljava/util/function/Consumer;)V"))
-    private void mavm$saveToBucketTag(DataComponentType<CustomData> dataComponentType, ItemStack itemStack, Consumer<CompoundTag> consumer) {
+    private void mavapi$saveToBucketTag(DataComponentType<CustomData> dataComponentType, ItemStack itemStack, Consumer<CompoundTag> consumer) {
         CustomData.update(DataComponents.BUCKET_ENTITY_DATA, itemStack, (compoundTag) -> {
             compoundTag.putString("Variant", ((AxolotlTypeExtension)(Object)getVariant()).mavapi$metadata().getId().toString());
             compoundTag.putInt("Age", this.getAge());
@@ -101,10 +101,10 @@ public abstract class AxolotlEntityMixin extends Animal {
     }
 
     @Inject(method = "loadFromBucketTag", at = @At(value = "RETURN"))
-    private void mavm$loadFromBucketTag(CompoundTag nbt, CallbackInfo ci) {
+    private void mavapi$loadFromBucketTag(CompoundTag nbt, CallbackInfo ci) {
         try {
             replaceLegacyId(nbt);
-            MoreAxolotlVariant variant1 = AxolotlVariants.getById(new ResourceLocation(nbt.getString(VARIANT_TAG)));
+            MoreAxolotlVariant variant1 = AxolotlVariants.getById(ResourceLocation.parse(nbt.getString(VARIANT_TAG)));
             this.setVariant(variant1.getType());
 
         } catch (Exception e) {
@@ -114,19 +114,19 @@ public abstract class AxolotlEntityMixin extends Animal {
     }
 
     @Redirect(method = "addAdditionalSaveData", at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/CompoundTag;putInt(Ljava/lang/String;I)V"))
-    private void mavm$addAdditionalSaveData(CompoundTag instance, String key, int value) {
+    private void mavapi$addAdditionalSaveData(CompoundTag instance, String key, int value) {
         instance.putString(VARIANT_TAG, ((AxolotlTypeExtension)(Object)this.getVariant()).mavapi$metadata().getId().toString());
     }
 
     @Unique
     private CompoundTag nbt;
     @Inject(method = "readAdditionalSaveData", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/animal/Animal;readAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V", shift = At.Shift.AFTER))
-    private void mavm$readAdditionalSaveData(CompoundTag nbt, CallbackInfo ci) {
+    private void mavapi$readAdditionalSaveData(CompoundTag nbt, CallbackInfo ci) {
         this.nbt = nbt;
     }
 
     @Redirect(method = "readAdditionalSaveData", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/animal/axolotl/Axolotl;setVariant(Lnet/minecraft/world/entity/animal/axolotl/Axolotl$Variant;)V"))
-    private void mavm$readAdditionalSaveData(Axolotl instance, Axolotl.Variant variant) {
+    private void mavapi$readAdditionalSaveData(Axolotl instance, Axolotl.Variant variant) {
         try {
             replaceLegacyId(nbt);
         } catch (Exception e) {
@@ -144,6 +144,7 @@ public abstract class AxolotlEntityMixin extends Animal {
 
     }
 
+    @Unique
     private void replaceLegacyId(CompoundTag nbt) {
         if (nbt.contains(VARIANT_TAG, Tag.TAG_INT)) {
             int i = nbt.getInt(VARIANT_TAG);

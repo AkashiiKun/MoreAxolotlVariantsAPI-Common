@@ -36,9 +36,9 @@ public class AxolotlVariantAPI {
     @ApiStatus.Internal
     public static Axolotl.Variant create(String internalName, int ordinal, int id, String name, boolean natural) {
         var d = new ArrayList<>(Arrays.stream(Axolotl.Variant.values()).toList());
-        var e = VariantWidener.newVariant(internalName, ordinal, id, name, natural);
+        var e = VariantWidener.mavapi$newVariant(internalName, ordinal, id, name, natural);
         d.add(e);
-        VariantWidener.setVariants(d.stream().sorted(Comparator.comparingInt(Axolotl.Variant::getId)).toArray(Axolotl.Variant[]::new));
+        VariantWidener.mavapi$setVariants(d.stream().sorted(Comparator.comparingInt(Axolotl.Variant::getId)).toArray(Axolotl.Variant[]::new));
         return e;
     }
 }

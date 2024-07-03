@@ -52,7 +52,7 @@ public class AxolotlEntityRendererMixin {
             for(Axolotl.Variant variant : Axolotl.Variant.values()) {
                 MoreAxolotlVariant metadata = ((AxolotlTypeExtension)(Object)variant).mavapi$metadata();
                 if(metadata.isModded()) {
-                    TEXTURE_BY_TYPE.replace(variant, new ResourceLocation(metadata.getId().getNamespace(), String.format(Locale.ROOT, "textures/entity/axolotl/axolotl_%s.png", metadata.getId().getPath())));
+                    TEXTURE_BY_TYPE.replace(variant, ResourceLocation.fromNamespaceAndPath(metadata.getId().getNamespace(), String.format(Locale.ROOT, "textures/entity/axolotl/axolotl_%s.png", metadata.getId().getPath())));
                 }
             }
     }

@@ -64,7 +64,7 @@ public class MoreAxolotlVariant {
     }
 
     public ResourceLocation getId() {
-        return !modded ? new ResourceLocation(type.getName()) : id;
+        return !modded ? ResourceLocation.tryParse(type.getName()) : id;
     }
 
     public Axolotl.Variant getType() {

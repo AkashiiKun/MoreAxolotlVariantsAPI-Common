@@ -6,8 +6,9 @@
   "client": [
     "AxolotlEntityRendererMixin",
     "ItemModelShaperMixin",
-	"ItemModelShaperMixin$ModelManagerAccessor",
-    "MobBucketItemMixin"
+    "ItemModelShaperMixin$ModelManagerAccessor",
+    "MobBucketItemMixin",
+    "ModelBakeryMixin"
   ],
   "mixins": [
     "AxolotlEntityMixin",
@@ -15,6 +16,6 @@
     "VariantWidener"
   ],
   "injectors": {
-	"defaultRequire": 1
+    "defaultRequire": 1
   }
 }

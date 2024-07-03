@@ -37,9 +37,9 @@ import java.util.List;
 public class AxolotlBuckets {
 
 	public static boolean doesModelForBucketExist(ResourceLocation resourceLocation) {
-		ResourceLocation fileLocation = new ResourceLocation(resourceLocation.getNamespace(), String.format("models/item/axolotl_bucket_%s.json", resourceLocation.getPath()));
+		ResourceLocation fileLocation = ResourceLocation.fromNamespaceAndPath(resourceLocation.getNamespace(), String.format("models/item/axolotl_bucket_%s.json", resourceLocation.getPath()));
 		List<Resource> stack = Minecraft.getInstance().getResourceManager().getResourceStack(fileLocation);
-		return stack.size() > 0; // Model exists
+		return !stack.isEmpty(); // Model exists
 	}
 
 }

@@ -15,8 +15,7 @@
   "icon": "icon.png",
   "environment": "*",
   "mixins": [
-    "${mod_id}-common.mixins.json",
-    "${mod_id}.mixins.json"
+    "${mod_id}-common.mixins.json"
   ],
   "depends": {
     "fabric-api": ">=${fabric_api}"

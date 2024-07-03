@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package io.github.akashiikun.mavapi.mixin;
+package io.github.akashiikun.mavapi.v1.mixin;
 
 import io.github.akashiikun.mavapi.v1.impl.AxolotlBuckets;
 import io.github.akashiikun.mavapi.v1.impl.AxolotlTypeExtension;
@@ -48,28 +48,28 @@ import java.util.Map;
 @Mixin(ModelBakery.class)
 public abstract class ModelBakeryMixin {
 
-	@Shadow @Final public static ModelResourceLocation MISSING_MODEL_LOCATION;
-
-	@Shadow public abstract UnbakedModel getModel(ResourceLocation resourceLocation);
+	@Shadow
+    abstract UnbakedModel getModel(ResourceLocation resourceLocation);
 
 	@Shadow @Final private Map<ResourceLocation, UnbakedModel> unbakedCache;
 
-	@Shadow @Final private Map<ResourceLocation, UnbakedModel> topLevelModels;
+	@Shadow @Final private Map<ModelResourceLocation, UnbakedModel> topLevelModels;
 
-	@Inject(method = "<init>", at = @At(value = "INVOKE", target = "net/minecraft/util/profiling/ProfilerFiller.popPush(Ljava/lang/String;)V", ordinal = 2, shift = At.Shift.AFTER))
+
+
+	@Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiling/ProfilerFiller;popPush(Ljava/lang/String;)V", ordinal = 0, shift = At.Shift.BEFORE))
 	private void addModelHook(CallbackInfo info) {
 		for (Axolotl.Variant variant : Axolotl.Variant.values()) {
 			MoreAxolotlVariant metadata = ((AxolotlTypeExtension) (Object) variant).mavapi$metadata();
-
 			ResourceLocation variantId = metadata.getId();
 
 			if (AxolotlBuckets.doesModelForBucketExist(variantId)) {
-				ResourceLocation modelLocation = new ResourceLocation(variantId.getNamespace(), String.format("item/axolotl_bucket_%s", variantId.getPath()));
+				ResourceLocation modelLocation = ResourceLocation.fromNamespaceAndPath(variantId.getNamespace(), String.format("item/axolotl_bucket_%s", variantId.getPath()));
 				UnbakedModel unbakedModel = getModel(modelLocation);
-				this.unbakedCache.put(modelLocation, unbakedModel);
-				this.topLevelModels.put(modelLocation, unbakedModel);
-			}
 
+				this.unbakedCache.put(modelLocation, unbakedModel);
+				this.topLevelModels.put(ModelResourceLocation.inventory(modelLocation), unbakedModel);
+			}
 		}
 	}
 

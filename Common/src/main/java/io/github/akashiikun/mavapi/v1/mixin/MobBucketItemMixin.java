@@ -47,6 +47,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -63,12 +64,12 @@ public abstract class MobBucketItemMixin {
 	private EntityType<?> entityType;
 
 	@Inject(method = "<init>", at = @At("RETURN"))
-	public void onInit(EntityType<?> entityType, Fluid fluid, SoundEvent soundEvent, Item.Properties properties, CallbackInfo ci) {
+	public void mavapi$onInit(EntityType<?> entityType, Fluid fluid, SoundEvent soundEvent, Item.Properties properties, CallbackInfo ci) {
 		this.entityType = entityType;
 	}
 
 	@Inject(method = "appendHoverText", at = @At(value = "HEAD"))
-	public void appendHoverText(ItemStack itemStack, Item.TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag, CallbackInfo ci) {
+	public void mavapi$appendHoverText(ItemStack itemStack, Item.TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag, CallbackInfo ci) {
 		if (entityType == EntityType.AXOLOTL) {
 			CompoundTag nbtCompound = itemStack.get(DataComponents.BUCKET_ENTITY_DATA).copyTag();
 			if (nbtCompound != null && nbtCompound.contains(Axolotl.VARIANT_TAG, Tag.TAG_STRING)) {
@@ -79,7 +80,7 @@ public abstract class MobBucketItemMixin {
 					MoreAxolotlVariant metadata = ((AxolotlTypeExtension) (Object) variant).mavapi$metadata();
 
 					ResourceLocation id = metadata.getId();
-					if (id.equals(new ResourceLocation(variantIdentifier))) {
+					if (id.equals(ResourceLocation.tryParse(variantIdentifier))) {
 
 						int age = nbtCompound.getInt("Age");
 
@@ -98,6 +99,7 @@ public abstract class MobBucketItemMixin {
 		}
 	}
 
+	@Unique
 	private MutableComponent translateOrFormat(String translation, String toFormat) {
 		MutableComponent component = Component.translatable(translation);
 		if (!I18n.exists(translation)) {
@@ -106,6 +108,7 @@ public abstract class MobBucketItemMixin {
 		return component;
 	}
 
+	@Unique
 	private String formatName(String s) {
 		s =  s.replace("_", " ");
 		s = String.valueOf(s.charAt(0)).toUpperCase(Locale.ROOT) + s.substring(1);

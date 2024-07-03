@@ -28,8 +28,11 @@ import io.github.akashiikun.mavapi.v1.api.AxolotlVariants;
 import io.github.akashiikun.mavapi.v1.impl.AxolotlBuckets;
 import io.github.akashiikun.mavapi.v1.impl.MoreAxolotlVariant;
 import net.minecraft.client.renderer.ItemModelShaper;
+import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelManager;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -49,6 +52,7 @@ import java.util.Map;
  * @author KxmischesDomi | https://github.com/kxmischesdomi
  * @since 1.0
  */
+
 @Mixin(ItemModelShaper.class)
 public abstract class ItemModelShaperMixin {
 
@@ -56,26 +60,26 @@ public abstract class ItemModelShaperMixin {
 	public interface ModelManagerAccessor {
 
 		@Accessor("bakedRegistry")
-		Map<ResourceLocation, BakedModel> getBakedRegistry();
+		Map<ModelResourceLocation, BakedModel> mavapi$getBakedRegistry();
 
 	}
 
-
-	@Shadow public abstract ModelManager getModelManager();
+	@Shadow(aliases = "getModelManager")public abstract ModelManager mavapi$getModelManager();
 
 	@Inject(method = "getItemModel(Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/client/resources/model/BakedModel;", at = @At("HEAD"), cancellable = true)
-	private void getModel(ItemStack stack, CallbackInfoReturnable<BakedModel> cir) {
+	private void mavapi$getBucketModel(ItemStack stack, CallbackInfoReturnable<BakedModel> cir) {
 		if (stack.is(Items.AXOLOTL_BUCKET)) {
 			CompoundTag nbtCompound = stack.get(DataComponents.BUCKET_ENTITY_DATA).copyTag();
 			if (nbtCompound.contains("Variant", Tag.TAG_STRING)) {
 				String variant = nbtCompound.getString("Variant");
 
-				MoreAxolotlVariant metadata = AxolotlVariants.getById(new ResourceLocation(variant));
+				MoreAxolotlVariant metadata = AxolotlVariants.getById(ResourceLocation.tryParse(variant));
 
 				if (AxolotlBuckets.doesModelForBucketExist(metadata.getId())) {
-					Map<ResourceLocation, BakedModel> models = ((ModelManagerAccessor) getModelManager()).getBakedRegistry();
-					ResourceLocation resourceLocation = new ResourceLocation(metadata.getId().getNamespace(), String.format("item/axolotl_bucket_%s", metadata.getId().getPath()));
-					BakedModel bakedModel = models.get(resourceLocation);
+					Map<ModelResourceLocation, BakedModel> models = ((ModelManagerAccessor) mavapi$getModelManager()).mavapi$getBakedRegistry();
+					ResourceLocation resourceLocation = ResourceLocation.fromNamespaceAndPath(metadata.getId().getNamespace(), String.format("item/axolotl_bucket_%s", metadata.getId().getPath()));
+					BakedModel bakedModel = models.get(ModelResourceLocation.inventory(resourceLocation));
+
 					if (bakedModel != null) cir.setReturnValue(bakedModel);
 				}
 			}

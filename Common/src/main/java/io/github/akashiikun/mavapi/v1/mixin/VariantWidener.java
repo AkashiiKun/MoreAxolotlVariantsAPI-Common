@@ -34,13 +34,13 @@ public interface VariantWidener {
 
     @Mutable
     @Accessor("$VALUES")
-    static void setVariants(Axolotl.Variant[] VARIANTS) {
+    static void mavapi$setVariants(Axolotl.Variant[] VARIANTS) {
         throw new UnsupportedOperationException();
     }
 
     @SuppressWarnings("InvokerTarget")
     @Invoker("<init>")
-    static Axolotl.Variant newVariant(String internalName, int internalId, int id, String name, boolean natural) {
+    static Axolotl.Variant mavapi$newVariant(String internalName, int internalId, int id, String name, boolean natural) {
         throw new AssertionError();
     }
 }
