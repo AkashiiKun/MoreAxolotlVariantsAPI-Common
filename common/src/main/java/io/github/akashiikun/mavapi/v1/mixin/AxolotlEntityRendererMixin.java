@@ -24,45 +24,27 @@
 
 package io.github.akashiikun.mavapi.v1.mixin;
 
-import io.github.akashiikun.mavapi.v1.impl.AxolotlTypeExtension;
-import io.github.akashiikun.mavapi.v1.impl.MoreAxolotlVariant;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Mutable;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.Locale;
-import java.util.Map;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.renderer.entity.AxolotlRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.Slice;
+
+import java.util.Locale;
 
 @Mixin(AxolotlRenderer.class)
 public class AxolotlEntityRendererMixin {
-    @Shadow
-    @Mutable
-    @Final
-    private static Map<Axolotl.Variant, ResourceLocation> TEXTURE_BY_TYPE;
-
-    @Inject(method = "<clinit>", at = @At(value = "TAIL"))
-    private static void mavapi$ModifyVariantTextures(CallbackInfo ci) {
-            for(Axolotl.Variant variant : Axolotl.Variant.values()) {
-                MoreAxolotlVariant metadata = ((AxolotlTypeExtension)(Object)variant).mavapi$metadata();
-                if(metadata.isModded()) {
-                    TEXTURE_BY_TYPE.replace(variant, ResourceLocation.fromNamespaceAndPath(metadata.getId().getNamespace(), String.format(Locale.ROOT, "textures/entity/axolotl/axolotl_%s.png", metadata.getId().getPath())));
-                }
-            }
-    }
-
-    @Inject(method = "<clinit>", at = @At("HEAD"))
-    private static void mavapi$clinit(CallbackInfo ci) {
-        MoreAxolotlVariant.p = true;
-    }
-    @Inject(method = "<clinit>", at = @At("RETURN"))
-    private static void mavapi$clinit2(CallbackInfo ci) {
-        MoreAxolotlVariant.p = false;
-    }
+	@Redirect(method = "*",
+			at = @At(value = "INVOKE",
+					target = "Lnet/minecraft/resources/ResourceLocation;withDefaultNamespace(Ljava/lang/String;)Lnet/minecraft/resources/ResourceLocation;"),
+			slice = @Slice(from = @At(value = "INVOKE",
+					target = "Lnet/minecraft/world/entity/animal/axolotl/Axolotl$Variant;values()[Lnet/minecraft/world/entity/animal/axolotl/Axolotl$Variant;"))
+	)
+	private static ResourceLocation textureLocation(String foul, @Local Axolotl.Variant variant) {
+		return ResourceLocation.parse(variant.getName())
+				.withPath(path -> String.format(Locale.ROOT, "textures/entity/axolotl/axolotl_%s.png", path));
+	}
 }

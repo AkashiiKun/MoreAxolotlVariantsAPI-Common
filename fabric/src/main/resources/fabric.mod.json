@@ -14,10 +14,15 @@
   "license": "${license}",
   "icon": "icon.png",
   "environment": "*",
+  "entrypoints": {
+    "main": [
+      "io.github.akashiikun.mavapi.v1.impl.Pivot::init"
+    ]
+  },
   "mixins": [
     "${mod_id}-common.mixins.json"
   ],
   "depends": {
-    "fabric-api": ">=${fabric_api}"
+    "fabric-api": "*"
   }
 }

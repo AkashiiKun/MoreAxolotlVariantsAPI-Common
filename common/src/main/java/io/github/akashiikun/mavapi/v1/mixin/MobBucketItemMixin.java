@@ -24,29 +24,24 @@
 
 package io.github.akashiikun.mavapi.v1.mixin;
 
+import io.github.akashiikun.mavapi.v1.impl.AxolotlRegistry;
 import io.github.akashiikun.mavapi.v1.impl.AxolotlTypeExtension;
-import io.github.akashiikun.mavapi.v1.impl.MoreAxolotlVariant;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MobBucketItem;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.material.Fluid;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -61,46 +56,36 @@ import java.util.Locale;
  */
 @Mixin(MobBucketItem.class)
 public abstract class MobBucketItemMixin {
-	private EntityType<?> entityType;
-
-	@Inject(method = "<init>", at = @At("RETURN"))
-	public void mavapi$onInit(EntityType<?> entityType, Fluid fluid, SoundEvent soundEvent, Item.Properties properties, CallbackInfo ci) {
-		this.entityType = entityType;
-	}
+	@Shadow
+	private EntityType<?> type;
 
 	@Inject(method = "appendHoverText", at = @At(value = "HEAD"))
-	public void mavapi$appendHoverText(ItemStack itemStack, Item.TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag, CallbackInfo ci) {
-		if (entityType == EntityType.AXOLOTL) {
-			CompoundTag nbtCompound = itemStack.get(DataComponents.BUCKET_ENTITY_DATA).copyTag();
-			if (nbtCompound != null && nbtCompound.contains(Axolotl.VARIANT_TAG, Tag.TAG_STRING)) {
-				String variantIdentifier = nbtCompound.getString(Axolotl.VARIANT_TAG);
-
-				for (Axolotl.Variant variant : Axolotl.Variant.values()) {
-
-					MoreAxolotlVariant metadata = ((AxolotlTypeExtension) (Object) variant).mavapi$metadata();
-
-					ResourceLocation id = metadata.getId();
-					if (id.equals(ResourceLocation.tryParse(variantIdentifier))) {
-
-						int age = nbtCompound.getInt("Age");
-
-						MutableComponent component = Component.translatable("mavapi.bucket.format",
-								age < 0 ? Component.translatable("mavapi.bucket.translation.baby") : Component.translatable("mavapi.bucket.translation.adult"),
-								translateOrFormat(String.format("mavapi.variant.%s.%s", id.getNamespace(), id.getPath()), id.getPath()),
-								translateOrFormat(String.format("mavapi.mod.%s", id.getNamespace()), id.getNamespace())
-						);
-						component.setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY));
-						list.add(component);
-						break;
-					}
-				}
-
-			}
+	private void mavapi$appendHoverText(ItemStack itemStack, Item.TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag, CallbackInfo ci) {
+		if (type != EntityType.AXOLOTL) {
+			return;
 		}
+
+		CompoundTag nbt = itemStack.get(DataComponents.BUCKET_ENTITY_DATA).copyTag();
+		if (nbt == null) {
+			return;
+		}
+
+		Axolotl.Variant variant = AxolotlRegistry.loadVariant(nbt.getInt(Axolotl.VARIANT_TAG), nbt);
+
+		ResourceLocation id = ((AxolotlTypeExtension) (Object) variant).mavapi$getId();
+		int age = nbt.getInt("Age");
+
+		MutableComponent component = Component.translatable("mavapi.bucket.format",
+				age < 0 ? Component.translatable("mavapi.bucket.translation.baby") : Component.translatable("mavapi.bucket.translation.adult"),
+				translateOrFormat(String.format("mavapi.variant.%s.%s", id.getNamespace(), id.getPath()), id.getPath()),
+				translateOrFormat(String.format("mavapi.mod.%s", id.getNamespace()), id.getNamespace())
+		);
+		component.setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY));
+		list.add(component);
 	}
 
 	@Unique
-	private MutableComponent translateOrFormat(String translation, String toFormat) {
+	private static MutableComponent translateOrFormat(String translation, String toFormat) {
 		MutableComponent component = Component.translatable(translation);
 		if (!I18n.exists(translation)) {
 			component = Component.literal(formatName(toFormat));
@@ -109,8 +94,8 @@ public abstract class MobBucketItemMixin {
 	}
 
 	@Unique
-	private String formatName(String s) {
-		s =  s.replace("_", " ");
+	private static String formatName(String s) {
+		s = s.replace("_", " ");
 		s = String.valueOf(s.charAt(0)).toUpperCase(Locale.ROOT) + s.substring(1);
 		return s;
 	}

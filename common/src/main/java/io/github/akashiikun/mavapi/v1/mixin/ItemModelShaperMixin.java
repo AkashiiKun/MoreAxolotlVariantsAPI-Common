@@ -24,19 +24,16 @@
 
 package io.github.akashiikun.mavapi.v1.mixin;
 
-import io.github.akashiikun.mavapi.v1.api.AxolotlVariants;
 import io.github.akashiikun.mavapi.v1.impl.AxolotlBuckets;
-import io.github.akashiikun.mavapi.v1.impl.MoreAxolotlVariant;
+import io.github.akashiikun.mavapi.v1.impl.AxolotlRegistry;
 import net.minecraft.client.renderer.ItemModelShaper;
-import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.animal.axolotl.Axolotl;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.spongepowered.asm.mixin.Mixin;
@@ -64,25 +61,29 @@ public abstract class ItemModelShaperMixin {
 
 	}
 
-	@Shadow(aliases = "getModelManager")public abstract ModelManager mavapi$getModelManager();
+	@Shadow
+	public abstract ModelManager getModelManager();
 
-	@Inject(method = "getItemModel(Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/client/resources/model/BakedModel;", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "getItemModel(Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/client/resources/model/BakedModel;",
+			at = @At("HEAD"), cancellable = true)
 	private void mavapi$getBucketModel(ItemStack stack, CallbackInfoReturnable<BakedModel> cir) {
-		if (stack.is(Items.AXOLOTL_BUCKET)) {
-			CompoundTag nbtCompound = stack.get(DataComponents.BUCKET_ENTITY_DATA).copyTag();
-			if (nbtCompound.contains("Variant", Tag.TAG_STRING)) {
-				String variant = nbtCompound.getString("Variant");
+		if (!stack.is(Items.AXOLOTL_BUCKET)) {
+			return;
+		}
 
-				MoreAxolotlVariant metadata = AxolotlVariants.getById(ResourceLocation.tryParse(variant));
+		CompoundTag nbt = stack.get(DataComponents.BUCKET_ENTITY_DATA).copyTag();
+		Axolotl.Variant variant = AxolotlRegistry.loadVariant(nbt.getInt(Axolotl.VARIANT_TAG), nbt);
+		ResourceLocation id = AxolotlRegistry.getKey(variant);
 
-				if (AxolotlBuckets.doesModelForBucketExist(metadata.getId())) {
-					Map<ModelResourceLocation, BakedModel> models = ((ModelManagerAccessor) mavapi$getModelManager()).mavapi$getBakedRegistry();
-					ResourceLocation resourceLocation = ResourceLocation.fromNamespaceAndPath(metadata.getId().getNamespace(), String.format("item/axolotl_bucket_%s", metadata.getId().getPath()));
-					BakedModel bakedModel = models.get(ModelResourceLocation.inventory(resourceLocation));
+		if (!AxolotlBuckets.doesModelForBucketExist(id)) {
+			return;
+		}
 
-					if (bakedModel != null) cir.setReturnValue(bakedModel);
-				}
-			}
+		Map<ModelResourceLocation, BakedModel> models = ((ModelManagerAccessor) getModelManager()).mavapi$getBakedRegistry();
+		BakedModel bakedModel = models.get(ModelResourceLocation.inventory(id.withPrefix("item/axolotl_bucket_")));
+
+		if (bakedModel != null) {
+			cir.setReturnValue(bakedModel);
 		}
 	}
 

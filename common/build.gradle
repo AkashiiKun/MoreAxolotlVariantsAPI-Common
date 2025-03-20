@@ -4,4 +4,5 @@ architectury {
 
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader}"
+    annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1")
 }

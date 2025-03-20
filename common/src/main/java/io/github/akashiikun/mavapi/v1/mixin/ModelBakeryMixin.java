@@ -26,7 +26,6 @@ package io.github.akashiikun.mavapi.v1.mixin;
 
 import io.github.akashiikun.mavapi.v1.impl.AxolotlBuckets;
 import io.github.akashiikun.mavapi.v1.impl.AxolotlTypeExtension;
-import io.github.akashiikun.mavapi.v1.impl.MoreAxolotlVariant;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.client.resources.model.UnbakedModel;
@@ -60,8 +59,7 @@ public abstract class ModelBakeryMixin {
 	@Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiling/ProfilerFiller;popPush(Ljava/lang/String;)V", ordinal = 0, shift = At.Shift.BEFORE))
 	private void addModelHook(CallbackInfo info) {
 		for (Axolotl.Variant variant : Axolotl.Variant.values()) {
-			MoreAxolotlVariant metadata = ((AxolotlTypeExtension) (Object) variant).mavapi$metadata();
-			ResourceLocation variantId = metadata.getId();
+			ResourceLocation variantId = ((AxolotlTypeExtension) (Object) variant).mavapi$getId();
 
 			if (AxolotlBuckets.doesModelForBucketExist(variantId)) {
 				ResourceLocation modelLocation = ResourceLocation.fromNamespaceAndPath(variantId.getNamespace(), String.format("item/axolotl_bucket_%s", variantId.getPath()));

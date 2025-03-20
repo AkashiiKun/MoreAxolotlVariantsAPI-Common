@@ -24,38 +24,84 @@
 
 package io.github.akashiikun.mavapi.v1.mixin;
 
-import io.github.akashiikun.mavapi.v1.api.AxolotlVariants;
+import io.github.akashiikun.mavapi.v1.impl.AxolotlRegistry;
 import io.github.akashiikun.mavapi.v1.impl.AxolotlTypeExtension;
-import io.github.akashiikun.mavapi.v1.impl.MoreAxolotlVariant;
+import io.github.akashiikun.mavapi.v1.impl.Pivot;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
+import org.objectweb.asm.Opcodes;
+import org.spongepowered.asm.mixin.Debug;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
+import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.function.IntFunction;
+
+@Debug(export = true)
 @Mixin(Axolotl.Variant.class)
 public class AxolotlTypeMixin implements AxolotlTypeExtension {
+	@Shadow
+	@Final
+	private int id;
 
-    @Unique
-    private MoreAxolotlVariant metadata;
+	@Shadow
+	@Final
+	@Mutable
+	private static IntFunction<Axolotl.Variant> BY_ID;
 
-    @Inject(method = "<init>", at = @At("TAIL"))
-    private void mavapi$init(String string, int i, int id, String name, boolean natural, CallbackInfo ci) {
-        metadata = MoreAxolotlVariant.make((Axolotl.Variant) (Object) this);
-        AxolotlVariants.BY_ID.put(metadata.getId(), metadata);
-    }
+	@Unique
+	private ResourceLocation identifier;
 
-    @Override
-    public MoreAxolotlVariant mavapi$metadata() {
-        return metadata;
-    }
+	@Inject(method = "<init>", at = @At("TAIL"))
+	private void mavapi$init(String string, int i, int id, String name, boolean natural, CallbackInfo ci) {
+		this.identifier = ResourceLocation.tryParse(name);
+		Pivot.INSTANCE.register(AxolotlRegistry.AXOLOTL_VARIANTS_KEY, identifier, (Axolotl.Variant) (Object) this);
+	}
 
+	@Override
+	public int mavapi$getLegacyId() {
+		return this.id;
+	}
 
-    @Inject(method = "getName", at = @At(("HEAD")), cancellable = true)
-    public void mavapi$getName(CallbackInfoReturnable<String> cir) {
-        if (MoreAxolotlVariant.p && metadata.isModded()) cir.setReturnValue("car");
-    }
+	@Override
+	public ResourceLocation mavapi$getId() {
+		return this.identifier;
+	}
 
+	/**
+	 * @author Ampflower
+	 * @reason Change ID to use registry.
+	 */
+	@Overwrite
+	public int getId() {
+		if (AxolotlRegistry.getKey((Axolotl.Variant) (Object) this) == null) {
+			return this.mavapi$getLegacyId();
+		}
+
+		return AxolotlRegistry.AXOLOTL_VARIANTS.getId((Axolotl.Variant) (Object) this);
+	}
+
+	/**
+	 * @author Ampflower
+	 * @reason Change ID to use registry.
+	 */
+	@Overwrite
+	public static Axolotl.Variant byId(int id) {
+		return AxolotlRegistry.getValue(id);
+	}
+
+	@Redirect(method = "<clinit>",
+			at = @At(value = "FIELD",
+					target = "Lnet/minecraft/world/entity/animal/axolotl/Axolotl$Variant;BY_ID:Ljava/util/function/IntFunction;",
+					opcode = Opcodes.PUTSTATIC))
+	private static void fixByIdFunction(IntFunction<Axolotl.Variant> ignored) {
+		BY_ID = AxolotlTypeMixin::byId;
+	}
 }

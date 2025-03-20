@@ -28,6 +28,8 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader}"
     modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api}+${rootProject.minecraft}"
 
+    modRuntimeOnly("maven.modrinth:canary-safety:2.0.19")
+
     common(project(path: ':common', configuration: 'namedElements')) { transitive false }
     shadowBundle project(path: ':common', configuration: 'transformProductionFabric')
 }

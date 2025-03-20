@@ -24,14 +24,11 @@
 
 package io.github.akashiikun.mavapi.v1.api;
 
-import io.github.akashiikun.mavapi.v1.impl.AxolotlTypeExtension;
 import io.github.akashiikun.mavapi.v1.impl.AxolotlVariantAPI;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
 
-import java.util.Locale;
-
-public class ModdedAxolotlVariant {
+public final class ModdedAxolotlVariant {
 
     public static Builder register(ResourceLocation id) {
         var builder = new Builder();
@@ -42,7 +39,7 @@ public class ModdedAxolotlVariant {
     public static class Builder {
 
         private boolean natural = false;
-        private int legacyIndex = -1;
+        private int index = -1;
         private ResourceLocation id;
 
         private Builder() {
@@ -54,24 +51,20 @@ public class ModdedAxolotlVariant {
             return this;
         }
 
-        public Builder setLegacyIndex(int legacyIndex) {
-            this.legacyIndex = legacyIndex;
+        public Builder setLegacyIndex(int index) {
+            this.index = index;
             return this;
         }
 
         public Axolotl.Variant build() {
-            Axolotl.Variant[] variants = Axolotl.Variant.values();
-            Axolotl.Variant lastVariant = variants[variants.length-1];
-            String internalName = id.toString().toLowerCase(Locale.ENGLISH);
-            int ordinal = variants[variants.length-1].ordinal()+1;
-            int id = lastVariant.getId()+1;
-            String name = internalName;
-            boolean natural = this.natural;
-            Axolotl.Variant variant = AxolotlVariantAPI.create(internalName, ordinal, id, name, natural);
-            ((AxolotlTypeExtension) (Object) variant).mavapi$metadata().modded();
-            ((AxolotlTypeExtension) (Object) variant).mavapi$metadata().setId(this.id);
-            ((AxolotlTypeExtension) (Object) variant).mavapi$metadata().setLegacyIndex(this.legacyIndex);
-            return variant;
+            String name = id.toString();
+            return AxolotlVariantAPI.create(
+                    name,
+                    Axolotl.Variant.values().length,
+                    this.index,
+                    name,
+                    this.natural
+            );
         }
 
     }

@@ -24,6 +24,10 @@
 
 package io.github.akashiikun.mavapi.v1.impl;
 
+import net.minecraft.resources.ResourceLocation;
+
 public interface AxolotlTypeExtension {
-    MoreAxolotlVariant mavapi$metadata();
+    int mavapi$getLegacyId();
+
+    ResourceLocation mavapi$getId();
 }

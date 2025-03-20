@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2021 - 2024 Akashii, 2023 - 2024 KxmischesDomi
+ * Copyright (c) 2023-2025 Ampflower
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,8 +22,31 @@
  * THE SOFTWARE.
  */
 
-package io.github.akashiikun.mavapi.v1;
+package io.github.akashiikun.mavapi.fabric.impl;
 
-public class MoreAxolotlVariantsAPI {
-    public static final String MOD_ID = "mavapi";
+import io.github.akashiikun.mavapi.v1.impl.Pivot;
+import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
+import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
+import net.minecraft.core.DefaultedMappedRegistry;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+
+/**
+ * @author Ampflower
+ * @since 2.0.0
+ **/
+public class FabricPivot implements Pivot {
+	@Override
+	public <V, T extends V> T register(final ResourceKey<Registry<V>> key, final ResourceLocation id, final T t) {
+		return Registry.register(Pivot.getRegistry(key), id, t);
+	}
+
+	@Override
+	public <T> DefaultedMappedRegistry<T> defaultRegistry(final ResourceKey<Registry<T>> registry, final ResourceLocation def) {
+		return FabricRegistryBuilder
+				.createDefaulted(registry, def)
+				.attribute(RegistryAttribute.SYNCED)
+				.buildAndRegister();
+	}
 }
