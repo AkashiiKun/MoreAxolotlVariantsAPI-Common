@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "version": "${mod_version}",
+  "name": "${mod_name}",
+  "description": "${mod_description}",
+  "authors": [
+    "${mod_author}"
+  ],
+  "contact": {
+    "homepage": "${discord}",
+    "sources": "${source}"
+  },
+  "license": "${license}",
+  "icon": "icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "io.github.akashiikun.mavapi.v1.impl.Pivot::init"
+    ]
+  },
+  "mixins": [
+    "${mod_id}-common.mixins.json"
+  ],
+  "depends": {
+    "fabric-api": "*"
+  }
+}
