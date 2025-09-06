@@ -16,7 +16,11 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "io.github.akashiikun.mavapi.v1.impl.Pivot::init"
+      "io.github.akashiikun.mavapi.v1.impl.Pivot::init",
+      "io.github.akashiikun.mavapi.fabric.MoreAxolotlVariantAPIMod"
+    ],
+    "client": [
+      "io.github.akashiikun.mavapi.fabric.MoreAxolotlVariantsModAPIClient"
     ]
   },
   "mixins": [

@@ -26,7 +26,11 @@ package io.github.akashiikun.mavapi.v1.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import io.github.akashiikun.mavapi.v1.impl.AxolotlRegistry;
+import io.github.akashiikun.mavapi.v1.networking.ServerRespondVariantPayload;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
 import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
@@ -53,6 +57,13 @@ public abstract class AxolotlEntityMixin {
 			at = @At(value = "INVOKE",
 					target = "Lnet/minecraft/world/entity/animal/axolotl/Axolotl$Variant;byId(I)Lnet/minecraft/world/entity/animal/axolotl/Axolotl$Variant;"))
 	private Axolotl.Variant loadVariant(int id, @Local(argsOnly = true) CompoundTag nbt) {
+        MinecraftServer server = ((Entity)(Object)this).getServer();
+
+        if (server != null) {
+            server.getPlayerList().getPlayers().forEach((player) -> {
+                ServerPlayNetworking.send(player, new ServerRespondVariantPayload(((Entity)(Object)this).getId(), AxolotlRegistry.loadVariant(nbt)));
+            });
+        }
 		return AxolotlRegistry.loadVariant(id, nbt);
 	}
 

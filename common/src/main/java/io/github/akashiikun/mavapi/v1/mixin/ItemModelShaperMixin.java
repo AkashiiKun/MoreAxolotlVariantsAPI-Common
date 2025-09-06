@@ -36,6 +36,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.CustomData;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.gen.Accessor;
@@ -71,8 +72,14 @@ public abstract class ItemModelShaperMixin {
 			return;
 		}
 
-		CompoundTag nbt = stack.get(DataComponents.BUCKET_ENTITY_DATA).copyTag();
-		Axolotl.Variant variant = AxolotlRegistry.loadVariant(nbt.getInt(Axolotl.VARIANT_TAG), nbt);
+        CustomData stackData = stack.get(DataComponents.BUCKET_ENTITY_DATA);
+        Axolotl.Variant variant;
+        if (stackData != null) {
+            CompoundTag nbt = stackData.copyTag();
+            variant = AxolotlRegistry.loadVariant(nbt.getInt(Axolotl.VARIANT_TAG), nbt);
+        } else {
+            variant = Axolotl.Variant.LUCY;
+        }
 		ResourceLocation id = AxolotlRegistry.getKey(variant);
 
 		if (!AxolotlBuckets.doesModelForBucketExist(id)) {

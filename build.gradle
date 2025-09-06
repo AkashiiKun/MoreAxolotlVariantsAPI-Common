@@ -54,6 +54,7 @@ subprojects {
             officialMojangMappings()
         }
 
+
         modRuntimeOnly("com.terraformersmc:modmenu:${rootProject.modmenu_version}")
         modRuntimeOnly("maven.modrinth:sodium:mc${rootProject.minecraft}-${rootProject.sodium_version}-fabric")
     }

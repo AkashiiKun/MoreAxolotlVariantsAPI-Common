@@ -40,6 +40,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MobBucketItem;
 import net.minecraft.world.item.TooltipFlag;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -56,7 +57,8 @@ import java.util.Locale;
  */
 @Mixin(MobBucketItem.class)
 public abstract class MobBucketItemMixin {
-	@Shadow
+	@Final
+    @Shadow
 	private EntityType<?> type;
 
 	@Inject(method = "appendHoverText", at = @At(value = "HEAD"))

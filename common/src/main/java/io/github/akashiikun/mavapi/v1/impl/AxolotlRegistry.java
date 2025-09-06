@@ -62,6 +62,13 @@ public final class AxolotlRegistry {
 		return (AxolotlTypeExtension) object;
 	}
 
+    public static String loadVariant(CompoundTag nbt) {
+        if (nbt.contains(Axolotl.VARIANT_TAG, Tag.TAG_STRING)) {
+            return nbt.getString(Axolotl.VARIANT_TAG);
+        }
+        return getKey(Axolotl.Variant.LUCY).toString();
+    }
+
 	public static Axolotl.Variant loadVariant(int id, CompoundTag nbt) {
 		if (nbt.contains(Axolotl.VARIANT_TAG, Tag.TAG_STRING)) {
 			return AxolotlRegistry.get(nbt.getString(Axolotl.VARIANT_TAG));
