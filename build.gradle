@@ -1,7 +1,7 @@
 plugins {
     id "architectury-plugin" version "+"
     id "dev.architectury.loom" version "1.+" apply false
-    id 'dev.yumi.gradle.licenser' version '1.1.+' apply false
+    id 'dev.yumi.gradle.licenser' version '2.+' apply false
     id 'com.github.johnrengelman.shadow' version '8.1.1' apply false
 }
 
@@ -33,8 +33,15 @@ subprojects {
 
     repositories {
         mavenLocal()
+        flatDir{
+            dirs "$rootProject.projectDir/libs"
+        }
         maven { url "https://jitpack.io" }
         maven { url "https://api.modrinth.com/maven"; name = "Modrinth" }
+        maven {
+            name = "Terraformers"
+            url = "https://maven.terraformersmc.com/"
+        }
     }
 
     loom {
@@ -46,6 +53,9 @@ subprojects {
         mappings loom.layered() {
             officialMojangMappings()
         }
+
+        modRuntimeOnly("com.terraformersmc:modmenu:${rootProject.modmenu_version}")
+        modRuntimeOnly("maven.modrinth:sodium:mc${rootProject.minecraft}-${rootProject.sodium_version}-fabric")
     }
 
     processResources {
