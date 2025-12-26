@@ -1,0 +1,8 @@
+{
+  "asset_id": "minecraft:entity/axolotl/axolotl_wild",
+  "spawn_conditions": [
+    {
+      "priority": 0
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "required": true,
+  "package": "io.github.akashiikun.mavapi.impl.mixin",
+  "plugin": "io.github.akashiikun.mavapi.impl.MixinConfigPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "refmap": "mavapi.refmap.json",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "AxolotlMixin",
+    "AxolotlMixin$AxolotlGroupData2Mixin",
+    "AxolotlMixin$AxolotlGroupDataMixin",
+    "EntitySpawnerItemVariantComponentFixMixin",
+    "ItemStackMixin",
+    "client.AxolotlRenderStateMixin"
+  ],
+  "client": [
+    "client.AxolotlRendererMixin"
+  ]
+}
