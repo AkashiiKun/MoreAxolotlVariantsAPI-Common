@@ -8,6 +8,8 @@ package io.github.akashiikun.mavapi.api.v2;
 import io.github.akashiikun.mavapi.impl.extension.AxolotlExtension;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.RandomSource;
@@ -15,6 +17,7 @@ import net.minecraft.util.Util;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
 
 import java.util.Map;
+import java.util.Optional;
 
 @SuppressWarnings("NullableProblems")
 public class AxolotlVariants {
@@ -62,5 +65,21 @@ public class AxolotlVariants {
 
 	public static Holder<AxolotlVariant> getVariant(Axolotl axolotl) {
 		return ((AxolotlExtension) axolotl).getVariant();
+	}
+
+	public static Optional<? extends Holder<AxolotlVariant>> getBucketVariant(RegistryAccess access, DataComponentGetter dataComponentGetter) {
+		{
+			Axolotl.Variant variant = dataComponentGetter.get(DataComponents.AXOLOTL_VARIANT);
+			if (variant != null) return access.get(fromVanilla(variant));
+		}
+		{
+			Holder<AxolotlVariant> variant = dataComponentGetter.get(MavApiDataComponents.AXOLOTL_VARIANT);
+			if (variant != null) return Optional.of(variant);
+		}
+		return Optional.empty();
+	}
+
+	public static boolean hasAxolotlVariantComponent(DataComponentGetter dataComponentGetter) {
+		return dataComponentGetter.get(DataComponents.AXOLOTL_VARIANT) != null || dataComponentGetter.get(MavApiDataComponents.AXOLOTL_VARIANT) != null;
 	}
 }
