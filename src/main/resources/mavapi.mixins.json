@@ -16,6 +16,7 @@
     "client.AxolotlRenderStateMixin"
   ],
   "client": [
-    "client.AxolotlRendererMixin"
+    "client.AxolotlRendererMixin",
+    "client.ItemModelResolverMixin"
   ]
 }
