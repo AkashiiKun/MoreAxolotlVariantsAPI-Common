@@ -124,7 +124,7 @@ modstitch {
         addMixinsToModManifest = true
 
         configs.register("mavapi")
-        if (isNeoforge) {
+        if (isNeoforge && stonecutter.eval(stonecutter.current.version, ">=1.21.6")) {
             configs.register("mavapi-neoforge")
         }
     }

@@ -36,8 +36,6 @@ import net.minecraft.world.entity.animal.axolotl.Axolotl;
 import net.minecraft.world.entity.variant.VariantUtils;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -49,6 +47,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+//? if >=1.21.6 {
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+//?} else {
+/*import net.minecraft.nbt.CompoundTag;
+*///?}
 
 import java.util.Optional;
 
@@ -82,8 +86,8 @@ public abstract class AxolotlMixin extends LivingEntity implements AxolotlExtens
 		return builder.define(DATA_VARIANT_ID, VariantUtils.getDefaultOrAny(this.registryAccess(), AxolotlVariants.LUCY));
 	}
 
-	@Redirect(method = "addAdditionalSaveData", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/storage/ValueOutput;store(Ljava/lang/String;Lcom/mojang/serialization/Codec;Ljava/lang/Object;)V")) // watch this just incase mojang adds more
-	<T> void mavapi$addAdditionalSaveData(ValueOutput output, String string, Codec<T> tCodec, T t) {
+	@Redirect(method = "addAdditionalSaveData", at = @At(value = "INVOKE", target = /*? if >=1.21.6 {*/"Lnet/minecraft/world/level/storage/ValueOutput;store(Ljava/lang/String;Lcom/mojang/serialization/Codec;Ljava/lang/Object;)V"/*?} else {*//*"Lnet/minecraft/nbt/CompoundTag;store(Ljava/lang/String;Lcom/mojang/serialization/Codec;Ljava/lang/Object;)V"*//*?}*/)) // watch this just incase mojang adds more
+	<T> void mavapi$addAdditionalSaveData(/*? if >=1.21.6 {*/ValueOutput/*?} else {*//*CompoundTag*//*?}*/ output, String string, Codec<T> tCodec, T t) {
 		VariantUtils.writeVariant(output, this.getVariant());
 	}
 
@@ -120,13 +124,13 @@ public abstract class AxolotlMixin extends LivingEntity implements AxolotlExtens
 
 	// Read mavapi's variant, not vanilla's "Variant"
 	@Inject(method = "readAdditionalSaveData", at = @At("RETURN"))
-	void mavapi$readAdditionalSaveData(ValueInput input, CallbackInfo ci) {
-		if (!readLegacyVariant(input)) VariantUtils.readVariant(input, MavApiRegistries.AXOLOTL_VARIANT).ifPresent(this::setVariant);
+	void mavapi$readAdditionalSaveData(/*? if >=1.21.6 {*/ValueInput/*?} else {*//*CompoundTag*//*?}*/ input, CallbackInfo ci) {
+		if (!readLegacyVariant(input)) VariantUtils.readVariant(input, /*? if <1.21.6 {*//*registryAccess(),*//*?}*/ MavApiRegistries.AXOLOTL_VARIANT).ifPresent(this::setVariant);
 	}
 
 	// Read vanilla's "Variant", as well as mavapi v1's "Variant"
 	@Unique
-	private boolean readLegacyVariant(ValueInput input) {
+	private boolean readLegacyVariant(/*? if >=1.21.6 {*/ValueInput/*?} else {*//*CompoundTag*//*?}*/ input) {
 		Axolotl.Variant legacyVariant = input.read("Variant", Axolotl.Variant.LEGACY_CODEC).orElse(null);
 		// Handle vanilla's variant
 		if (legacyVariant != null) {

@@ -9,7 +9,11 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
+//? if >=1.21.6 {
 import net.minecraft.world.level.storage.ValueInput;
+//?} else {
+/*import net.minecraft.nbt.CompoundTag;
+*///?}
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -33,7 +37,7 @@ public class _Dummy extends Axolotl {
 
 	@Name("readAdditionalSaveData")
 	@Override
-	public native void readAdditionalSaveData(ValueInput input);
+	public native void readAdditionalSaveData(/*? if >=1.21.6 {*/ValueInput/*?} else {*//*CompoundTag*//*?}*/ input);
 
 	@Name("getBreedOffspring")
 	@Override
