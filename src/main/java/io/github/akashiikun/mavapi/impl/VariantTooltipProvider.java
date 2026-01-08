@@ -62,7 +62,7 @@ public final class VariantTooltipProvider implements TooltipProvider {
 		if (customData != null && axolotlVariantResourceKey.isPresent()) {
 			Optional<Integer> ageInt = customData.copyTag().getInt("Age");
 			Age age = ageInt.map(nbtAge -> nbtAge < 0 ? Age.BABY : Age.ADULT).orElse(Age.ADULT);
-			Identifier id = axolotlVariantResourceKey.get().identifier();
+			Identifier id = MultiversionHelper.toIdentifier(axolotlVariantResourceKey.get());
 			component = Component.translatable("mavapi.bucket.format",
 					Component.translatable(age.translationKey),
 					translateOrFormat(String.format("mavapi.variant.%s.%s", id.getNamespace(), id.getPath()), id.getPath()),

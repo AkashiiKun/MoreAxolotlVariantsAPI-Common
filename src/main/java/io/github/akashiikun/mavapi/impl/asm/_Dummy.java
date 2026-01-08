@@ -10,7 +10,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
 import net.minecraft.world.level.storage.ValueInput;
-import org.jspecify.annotations.Nullable;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -38,7 +37,7 @@ public class _Dummy extends Axolotl {
 
 	@Name("getBreedOffspring")
 	@Override
-	public @Nullable native AgeableMob getBreedOffspring(ServerLevel level, AgeableMob otherParent);
+	public native AgeableMob getBreedOffspring(ServerLevel level, AgeableMob otherParent);
 
 	@Name("setPersistenceRequired")
 	@Override

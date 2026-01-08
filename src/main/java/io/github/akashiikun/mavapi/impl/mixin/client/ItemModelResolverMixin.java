@@ -9,6 +9,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import io.github.akashiikun.mavapi.api.v2.AxolotlVariant;
 import io.github.akashiikun.mavapi.api.v2.AxolotlVariants;
+import io.github.akashiikun.mavapi.impl.MultiversionHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.item.MissingItemModel;
@@ -28,7 +29,7 @@ public class ItemModelResolverMixin {
 	private <T> T get(ItemStack stack, DataComponentType<T> dataComponentType, Operation<T> original) {
 		Identifier identifier;
 		Holder<AxolotlVariant> axolotlVariantHolder;
-		if (dataComponentType == DataComponents.ITEM_MODEL && stack.is(Items.AXOLOTL_BUCKET) && !stack.hasNonDefault(DataComponents.ITEM_MODEL) && AxolotlVariants.hasAxolotlVariantComponent(stack) && (axolotlVariantHolder = AxolotlVariants.getBucketVariant(Minecraft.getInstance().level.registryAccess(), stack).orElse(null)) != null && !(Minecraft.getInstance().getModelManager().getItemModel(identifier = axolotlVariantHolder.unwrapKey().map(a -> a.identifier()).map(a -> a.withSuffix("_axolotl_bucket")).orElse(Identifier.withDefaultNamespace("missingno"))) instanceof MissingItemModel)) {
+		if (dataComponentType == DataComponents.ITEM_MODEL && stack.is(Items.AXOLOTL_BUCKET) && !stack.hasNonDefault(DataComponents.ITEM_MODEL) && AxolotlVariants.hasAxolotlVariantComponent(stack) && (axolotlVariantHolder = AxolotlVariants.getBucketVariant(Minecraft.getInstance().level.registryAccess(), stack).orElse(null)) != null && !(Minecraft.getInstance().getModelManager().getItemModel(identifier = axolotlVariantHolder.unwrapKey().map(MultiversionHelper::toIdentifier).map(a -> a.withSuffix("_axolotl_bucket")).orElse(Identifier.withDefaultNamespace("missingno"))) instanceof MissingItemModel)) {
 			//noinspection unchecked
 			return (T) identifier;
 		}
