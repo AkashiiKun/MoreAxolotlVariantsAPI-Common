@@ -259,7 +259,7 @@ java {
 publishMods {
     dryRun.set(false)
 
-    displayName.set("$versionWithoutMC for $loader $mcVersion")
+    displayName.set("$versionWithoutMC ($mcVersion ${if (loader == "fabric") "Fabric" else "NeoForge"})")
 
     file = modstitch.finalJarTask.flatMap { it.archiveFile }
 
