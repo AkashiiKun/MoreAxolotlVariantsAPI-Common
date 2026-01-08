@@ -20,14 +20,14 @@ import net.minecraft.world.entity.variant.SpawnPrioritySelectors;
 
 import java.util.List;
 
-public record AxolotlVariant(ClientAsset.ResourceTexture assetInfo, SpawnPrioritySelectors spawnConditions, boolean rare) implements PriorityProvider<SpawnContext, SpawnCondition> {
-	public static final Codec<AxolotlVariant> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(ClientAsset.ResourceTexture.DEFAULT_FIELD_CODEC.forGetter(AxolotlVariant::assetInfo), SpawnPrioritySelectors.CODEC.fieldOf("spawn_conditions").forGetter(AxolotlVariant::spawnConditions), Codec.BOOL.optionalFieldOf("rare", false).forGetter(AxolotlVariant::rare)).apply(instance, AxolotlVariant::new));
+public record AxolotlVariant(ClientAsset/*? if >=1.21.9 {*/.ResourceTexture/*?}*/ assetInfo, SpawnPrioritySelectors spawnConditions, boolean rare) implements PriorityProvider<SpawnContext, SpawnCondition> {
+	public static final Codec<AxolotlVariant> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(ClientAsset/*? if >=1.21.9 {*/.ResourceTexture/*?}*/.DEFAULT_FIELD_CODEC.forGetter(AxolotlVariant::assetInfo), SpawnPrioritySelectors.CODEC.fieldOf("spawn_conditions").forGetter(AxolotlVariant::spawnConditions), Codec.BOOL.optionalFieldOf("rare", false).forGetter(AxolotlVariant::rare)).apply(instance, AxolotlVariant::new));
 	// this is from the server to the client?
-	public static final Codec<AxolotlVariant> NETWORK_CODEC = RecordCodecBuilder.create(instance -> instance.group(ClientAsset.ResourceTexture.DEFAULT_FIELD_CODEC.forGetter(AxolotlVariant::assetInfo)).apply(instance, AxolotlVariant::new));
+	public static final Codec<AxolotlVariant> NETWORK_CODEC = RecordCodecBuilder.create(instance -> instance.group(ClientAsset/*? if >=1.21.9 {*/.ResourceTexture/*?}*/.DEFAULT_FIELD_CODEC.forGetter(AxolotlVariant::assetInfo)).apply(instance, AxolotlVariant::new));
 	public static final Codec<Holder<AxolotlVariant>> CODEC;
 	public static final StreamCodec<RegistryFriendlyByteBuf, Holder<AxolotlVariant>> STREAM_CODEC;
 
-	private AxolotlVariant(ClientAsset.ResourceTexture assetInfo) {
+	private AxolotlVariant(ClientAsset/*? if >=1.21.9 {*/.ResourceTexture/*?}*/ assetInfo) {
 		this(assetInfo, SpawnPrioritySelectors.EMPTY, false);
 	}
 
