@@ -1,5 +1,6 @@
 {
   "asset_id": "minecraft:entity/axolotl/axolotl_wild",
+  "baby_asset_id": "minecraft:entity/axolotl/axolotl_wild_baby",
   "spawn_conditions": [
     {
       "priority": 0

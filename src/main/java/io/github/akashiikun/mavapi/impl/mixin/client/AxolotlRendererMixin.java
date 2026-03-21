@@ -5,6 +5,7 @@
 // You should have received a copy of the GNU Lesser General Public License along with More Axolotl Variants API. If not, see <https://www.gnu.org/licenses/>.
 package io.github.akashiikun.mavapi.impl.mixin.client;
 
+import io.github.akashiikun.mavapi.api.v2.AxolotlVariant;
 import io.github.akashiikun.mavapi.api.v2.AxolotlVariants;
 import io.github.akashiikun.mavapi.impl.extension.client.AxolotlRenderStateExtension;
 import net.minecraft.client.renderer.entity.AxolotlRenderer;
@@ -14,6 +15,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -26,7 +28,12 @@ public class AxolotlRendererMixin {
 	 */
 	@Overwrite
 	public Identifier getTextureLocation(AxolotlRenderState axolotlRenderState) {
-		return ((AxolotlRenderStateExtension) axolotlRenderState).getVariant() == null ? MissingTextureAtlasSprite.getLocation() : ((AxolotlRenderStateExtension) axolotlRenderState).getVariant().assetInfo().texturePath();
+		return ((AxolotlRenderStateExtension) axolotlRenderState).getVariant() == null ? MissingTextureAtlasSprite.getLocation() : getAxolotlTextureFromVariant(((AxolotlRenderStateExtension) axolotlRenderState).getVariant(), axolotlRenderState.isBaby);
+	}
+
+	@Unique
+	private Identifier getAxolotlTextureFromVariant(AxolotlVariant axolotlVariant, boolean isBaby) {
+		return /*? if >=26.1 {*//*isBaby ? axolotlVariant.babyTexture().texturePath() : *//*?}*/axolotlVariant.assetInfo().texturePath();
 	}
 
 	@Inject(method = "extractRenderState(Lnet/minecraft/world/entity/animal/axolotl/Axolotl;Lnet/minecraft/client/renderer/entity/state/AxolotlRenderState;F)V", at = @At("RETURN"))

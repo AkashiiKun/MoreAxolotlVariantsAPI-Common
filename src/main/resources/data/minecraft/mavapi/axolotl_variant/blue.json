@@ -1,5 +1,6 @@
 {
   "asset_id": "minecraft:entity/axolotl/axolotl_blue",
+  "baby_asset_id": "minecraft:entity/axolotl/axolotl_blue_baby",
   "rare": true,
   "spawn_conditions": []
 }
