@@ -33,7 +33,7 @@ public class AxolotlRendererMixin {
 
 	@Unique
 	private Identifier getAxolotlTextureFromVariant(AxolotlVariant axolotlVariant, boolean isBaby) {
-		return /*? if >=26.1 {*//*isBaby ? axolotlVariant.babyTexture().texturePath() : *//*?}*/axolotlVariant.assetInfo().texturePath();
+		return /*? if >=26.1 {*/isBaby ? axolotlVariant.babyTexture().texturePath() : /*?}*/axolotlVariant.assetInfo().texturePath();
 	}
 
 	@Inject(method = "extractRenderState(Lnet/minecraft/world/entity/animal/axolotl/Axolotl;Lnet/minecraft/client/renderer/entity/state/AxolotlRenderState;F)V", at = @At("RETURN"))

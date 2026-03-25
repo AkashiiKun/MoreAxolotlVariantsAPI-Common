@@ -7,7 +7,7 @@ package io.github.akashiikun.mavapi.impl.init;
 
 import io.github.akashiikun.mavapi.api.v2.AxolotlVariant;
 //? if fabric {
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricTrackedDataRegistry;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityDataRegistry;
 //?} else if neoforge {
 /*import net.minecraft.core.Registry;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
@@ -22,7 +22,7 @@ public class ModEntityDataSerializers {
 
 	static {
 		//? if fabric {
-		FabricTrackedDataRegistry.register(Identifier.parse("mavapi:axolotl_variant"), AXOLOTL_VARIANT);
+		FabricEntityDataRegistry.register(Identifier.parse("mavapi:axolotl_variant"), AXOLOTL_VARIANT);
 		//?}
 	}
 }

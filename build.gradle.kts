@@ -45,7 +45,11 @@ val testmod by sourceSets.registering {
 
 modstitch {
     minecraftVersion = mcVersion
-    javaVersion = 21
+    javaVersion = if (stonecutter.eval(stonecutter.current.version, ">=26.1")) {
+        25
+    } else {
+        21
+    }
 
     parchment {
         prop("parchment.version") { mappingsVersion = it }
