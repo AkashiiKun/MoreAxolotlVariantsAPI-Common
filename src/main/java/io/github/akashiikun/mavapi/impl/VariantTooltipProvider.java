@@ -14,8 +14,8 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponents;
 //? if >=26.2 {
-/*import net.minecraft.locale.Language;
-*///?}
+import net.minecraft.locale.Language;
+//?}
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -83,7 +83,7 @@ public final class VariantTooltipProvider implements TooltipProvider {
 	private MutableComponent translateOrFormat(String translation, String toFormat) {
 		MutableComponent component = Component.translatable(translation);
 		//~ if >=26.2 'I18n.exists' -> 'Language.getInstance().has'
-		if (!I18n.exists(translation)) {
+		if (!Language.getInstance().has(translation)) {
 			component = Component.literal(formatName(toFormat));
 		}
 		return component;
