@@ -70,7 +70,7 @@ modstitch {
         }
         modGroup = "io.github.akashiikun"
         prop("modDescription") { modDescription = it }
-        modLicense = "LGPL-3.0-or-later"
+        modLicense = "ARR"
         modAuthor = "AkashiiKun"
 
         prop("githubProject") { replacementProperties.put("github", it) }

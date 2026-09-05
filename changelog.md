@@ -2,11 +2,12 @@
 
 ### 2.2.0 targets
 
-|                          | Fabric | NeoForge |
-|:-------------------------|--------|----------|
-| 26.2 Release Candidate 2 | ✅      | ❌        |
-| 26.1                     | ✅      | ❌        |
+|                             | Fabric | NeoForge |
+|:----------------------------|--------|----------|
+| 26.3 Pre-Release 2          | ✅      | ❌        |
 
 ### Changes
 
-- Add support for Minecraft 26.1 Release Candidate 2.
+- Add support for Minecraft 26.3 Pre-Release 2.
+- Add Spanish Translation
+- Add Korean Translation [#26](https://github.com/AkashiiKun/MoreAxolotlVariantsAPI-Common/pull/26)

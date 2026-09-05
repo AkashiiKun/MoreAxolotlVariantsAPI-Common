@@ -23,8 +23,9 @@ stonecutter {
             }
         }
 
-        mc("26.2", loaders = listOf("fabric"))
-        mc("26.1", loaders = listOf("fabric"))
+        mc("26.3", loaders = listOf("fabric"))
+//        mc("26.2", loaders = listOf("fabric"))
+//        mc("26.1", loaders = listOf("fabric"))
 //        mc("1.21.11", loaders = listOf("fabric", "neoforge"))
 //        mc("1.21.10", loaders = listOf("fabric", "neoforge"))
 //        mc("1.21.8", loaders = listOf("fabric", "neoforge"))
