@@ -1,0 +1,13 @@
+{
+  "mavapi.mod.minecraft": "Minecraft",
+
+  "mavapi.variant.minecraft.lucy": "루시 아홀로틀",
+  "mavapi.variant.minecraft.wild": "와일드 아홀로틀",
+  "mavapi.variant.minecraft.gold": "금색 아홀로틀",
+  "mavapi.variant.minecraft.cyan": "시안 이홀로틀",
+  "mavapi.variant.minecraft.blue": "파란색 아홀로틀",
+
+  "mavapi.bucket.format": "%s %s (%s)",
+  "mavapi.bucket.translation.baby": "아기",
+  "mavapi.bucket.translation.adult": "성체"
+}
